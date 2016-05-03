@@ -30,9 +30,8 @@
   (GET "/" request
        {:status 200
         :headers {"Content-type" "text/html;charset=utf-8"}
-        :body (html [:head [:title "benvenuto a caldo!"]
-                     :body [:div "benvenuto a caldo"]])}))
-                  
+        :body (html [:html [:head [:title "benvenuto a caldo!"]]
+                     [:body [:div "Benvenuto a caldo!!"]]])}))
 
 (def app
   (handler/site 
