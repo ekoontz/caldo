@@ -30,8 +30,15 @@
   (GET "/" request
        {:status 200
         :headers {"Content-type" "text/html;charset=utf-8"}
-        :body (html [:html [:head [:title "benvenuto a caldo!"]]
-                     [:body [:div "Benvenuto a caldo!!"]]])}))
+        :body (html [:html [:head [:title "benvenuto a caldo!"]
+                                  [:style "* { padding: 0; margin: 0;}
+                                           canvas { background: #eee;
+                                           display: block; margin: 0 auto; }"]]
+                     [:body [:canvas#myCanvas {:width "480" :height "320"}]
+                      [:script
+                       "// javascript goes here.."
+                       ]
+                      ]])}))
 
 (def app
   (handler/site 
