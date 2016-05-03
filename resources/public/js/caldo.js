@@ -27,8 +27,21 @@ var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 var bricks = [];
 var deadBricks = 0;
+
 // score
 var score = 0;
+
+var lives = 3;
+
+function drawLives() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Lives:" + lives,
+		 canvas.width - 65,
+		 20);
+}
+
+
 function drawScore() {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
@@ -135,6 +148,7 @@ function draw() {
     drawBall();
     drawPaddle();
     drawScore();
+    drawLives();
     collisionDetection();
     x += dx;
     y += dy;
@@ -148,11 +162,22 @@ function draw() {
 	    dy = -dy; // player saved the ball!
 	} else {
 	    // hit the bottom: game over.
-	    alert("GAME OVER");
-	    document.location.reload();
+	    lives--;
+	    if (lives == 0) {
+		alert("GAME OVER");
+		document.location.reload();
+	    } else {
+		alert("You have " +
+		      lives + " lives left.");
+		x = canvas.width/2;
+		y = canvas.height-30;
+		dx = 2;
+		dy = -2;
+		paddleX =
+		    (canvas.width - paddleWidth) / 2;
+	    }
 	}
     }
-
     
     if ((x + dx - ballRadius < 0) || (x + dx > canvas.width - ballRadius)) {
 	dx= -dx;
@@ -164,6 +189,8 @@ function draw() {
     else if (leftPressed && (paddleX > 0)) {
 	paddleX -= 7;
     }
+
+    requestAnimationFrame(draw);
 }
 
 document.addEventListener("mousemove",
@@ -178,5 +205,5 @@ function mouseMoveHandler(e) {
 }
 
 
-setInterval(draw,10);
+draw();
 
