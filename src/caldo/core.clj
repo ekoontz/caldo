@@ -35,11 +35,12 @@
         :body (html [:html [:head [:title "benvenuto a caldo!"]
                                   [:style "* { padding: 0; margin: 0;}
                                            canvas { background: #eee;
-                                           display: block; margin: 0 auto; }"]]
-                     [:body [:canvas#myCanvas {:width "480" :height "320"}]
+                                                    display: block; 
+                                                    margin: 0 auto; }"]]
+                     [:body [:div {:style "padding:1em"}
+                             [:canvas#myCanvas {:width "480" :height "320"}]]
                       [:script {:type "text/javascript"
-                                :src "/js/caldo.js"}]
-                      ]])}))
+                                :src "/js/caldo.js"}]]])}))
 
 (def app
   (handler/site 
