@@ -56,9 +56,21 @@ function draw() {
     x += dx;
     y += dy;
 
-    if ((y + dy - ballRadius < 0) || (y + dy > (canvas.height - ballRadius))) {
+    if ((y + dy - ballRadius < 0)) {
+	// hit the top: bounce
 	dy = -dy;
+    } else if (y + dy > (canvas.height - ballRadius)) {
+	if ((x > paddleX) &&
+	    (x < (paddleX + paddleWidth))) {
+	    dy = -dy; // player saved the ball!
+	} else {
+	    // hit the bottom: game over.
+	    alert("GAME OVER");
+	    document.location.reload();
+	}
     }
+
+    
     if ((x + dx - ballRadius < 0) || (x + dx > canvas.width - ballRadius)) {
 	dx= -dx;
     }
