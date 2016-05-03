@@ -23,11 +23,12 @@ function preload() {
 
 
 function create() {
-    ball = game.add.sprite(50,50,'ball');
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    ball = game.add.sprite(50,300,'ball');
+    game.physics.enable(ball,Phaser.Physics.ARCADE);
+    ball.body.velocity.set(10,-100);
+    ball.body.gravity.y = 15;
 }
 
 function update() {
-    ball.x += 1;
-    ball.y += 1;
-   
 }
