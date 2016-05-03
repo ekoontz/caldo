@@ -1,6 +1,6 @@
 # caldo
 
-A Clojure library designed to ... well, that part is up to you.
+A fun javascript game - combine words to win!
 
 ## Usage
 
@@ -8,7 +8,6 @@ FIXME
 
 ## License
 
-Copyright © 2016 FIXME
+GNU GENERAL PUBLIC LICENSE 
+Version 3, 29 June 2007
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
