@@ -27,6 +27,8 @@
   (println x "Hello, World!"))
 
 (defroutes main-routes
+  (route/resources "/")
+
   (GET "/" request
        {:status 200
         :headers {"Content-type" "text/html;charset=utf-8"}
@@ -35,9 +37,8 @@
                                            canvas { background: #eee;
                                            display: block; margin: 0 auto; }"]]
                      [:body [:canvas#myCanvas {:width "480" :height "320"}]
-                      [:script
-                       "// javascript goes here.."
-                       ]
+                      [:script {:type "text/javascript"
+                                :src "/js/caldo.js"}]
                       ]])}))
 
 (def app
