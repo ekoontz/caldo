@@ -24,9 +24,11 @@ function preload() {
 
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    ball = game.add.sprite(50,300,'ball');
+    ball = game.add.sprite(50,100,'ball');
     game.physics.enable(ball,Phaser.Physics.ARCADE);
+    ball.body.collideWorldBounds = true;
     ball.body.velocity.set(10,-100);
+    ball.body.bounce.set(0.5);
     ball.body.gravity.y = 15;
 }
 
