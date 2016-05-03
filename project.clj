@@ -1,8 +1,8 @@
 (defproject caldo "0.1.0-SNAPSHOT"
   :description "the hottest new game"
   :url "https://caldo.verbcoach.com"
-  :license {:name "Proprietary"
-            :url "http://verbcoach.com"}
+  :license {:name "GPL 3"
+            :url "http://gnu.org/"}
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [babel "1.1.2"]
                  [digest "1.4.4"]
