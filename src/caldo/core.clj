@@ -37,8 +37,10 @@
                                            canvas { background: #eee;
                                                     display: block; 
                                                     margin: 0 auto; }"]]
-                     [:body [:div {:style "padding:1em"}
-                             [:canvas#myCanvas {:width "480" :height "320"}]]
+                     [:body [:div {:style "padding:1em"} "CALDO"]
+
+                      [:script {:type "text/javascript"
+                                :src "/js/phaser.min.js"}]
                       [:script {:type "text/javascript"
                                 :src "/js/caldo.js"}]]])}))
 
