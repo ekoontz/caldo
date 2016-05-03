@@ -37,6 +37,14 @@ function create() {
     ball.body.velocity.set(125,-250);
     ball.body.bounce.set(1);
     ball.body.gravity.y = 15;
+    game.physics.arcade.checkCollision.down = false;
+
+    ball.checkWorldBounds = true;
+    ball.events.onOutOfBounds.add(function() {
+	alert('game over!');
+	location.reload();
+    },this);
+    
     paddle.anchor.set(0.5,1);
     paddle.body.immovable = true;
 }
