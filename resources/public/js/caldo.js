@@ -16,7 +16,7 @@ var paddle;
 
 var bricks;
 var newBrick;
-var brinkInfo;
+var brickInfo;
 
 function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -49,10 +49,10 @@ function initBricks() {
 
 	    // create new brick and add to the group
 	    var brickX =
-		(r*(brickInfo.width+brinkInfo.padding)) +
+		(r*(brickInfo.width+brickInfo.padding)) +
 		brickInfo.offset.left;
 	    var brickY =
-		(r*(brickInfo.height+brinkInfo.padding)) +
+		(c*(brickInfo.height+brickInfo.padding)) +
 		brickInfo.offset.top;
 	    newBrick =
 		game.add.sprite(brickX, brickY, 'brick');
