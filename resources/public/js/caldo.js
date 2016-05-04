@@ -35,7 +35,7 @@ function create() {
 
     shelves = game.add.group();
     for (c = 0; c < num_shelves; c++) {
-	shelf = game.add.sprite((83*c)+9,game.world.height*0.9,'shelf')
+	shelf = game.add.sprite((150*c)+100,game.world.height*0.9,'shelf')
 	game.physics.enable(shelf,Phaser.Physics.ARCADE);
 	shelf.body.gravity.y = 0; // shelf is floating in the air.
 	shelf.body.bounce.set(0.9);
@@ -53,7 +53,7 @@ function create() {
 		  align: "center",
 		  backgroundColor: "#ffff00" };
 	
-	text = game.add.text(250 * c, 100, "parlare", style);
+	text = game.add.text((150 * c) + 125, 100, "parlare", style);
 	text.anchor.set(0.5);
 	
 	game.physics.arcade.enable([text]);
