@@ -48,24 +48,6 @@ function create() {
     }
     
     words = game.add.group();
-    for (c = 0; c < num_words_at_a_time; c++) {
-	
-	style = { font: "32px Arial",
-		  fill: "#ff0044",
-		  wordWrap: true,
-		  align: "center",
-		  backgroundColor: "#ffff00" };
-	
-	text = game.add.text((150 * c) + 125, 100, "parlare", style);
-	text.anchor.set(0.5);
-	
-	game.physics.arcade.enable([text]);
-	text.body.velocity.setTo(0,0);
-	text.body.gravity.y = 100;
-	text.body.collideWorldBounds = true;
-	text.body.bounce.set(0.5);
-	words.add(text);
-    }
 }
 
 function wordHitShelf(word,shelf) {
@@ -81,12 +63,15 @@ var intervalID = window.setInterval(function() {newWord(0);},
 				    newWordInterval);
 var intervalID = window.setInterval(function() {newWord(1);},
 				    newWordInterval*2);
+var intervalID = window.setInterval(function() {newWord(2);},
+				    newWordInterval*3);
 
-function randomWord() {
-    var shelf = 0;
-    var shelf_words = [
-	["io","tu","voi","noi"],
-	["parlare","controllare","sprecare","fermatare","scrivere"]];
+var shelf_words = [
+    ["io","tu","voi","noi"],
+    ["parlare","controllare","sprecare","fermatare","scrivere"],
+    ["lui","lo","la","loro"]];
+
+function randomWord(shelf) {
     var random_integer = Math.floor(Math.random() * shelf_words[shelf].length);
     return shelf_words[shelf][random_integer];
 }
@@ -98,7 +83,7 @@ function newWord(shelf) {
 	      align: "center",
 	      backgroundColor: "#ffff00" };
 	
-    text = game.add.text( (150*shelf) + 100, 0, randomWord(shelf), style);
+    text = game.add.text( (150*shelf) + 125, 0, randomWord(shelf), style);
     text.anchor.set(0.5);
     
     game.physics.arcade.enable([text]);
