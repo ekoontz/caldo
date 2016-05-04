@@ -77,8 +77,10 @@ function update() {
     game.physics.arcade.collide(words,words,wordHitShelf);
 }
 
-var intervalID = window.setInterval(newWord,
+var intervalID = window.setInterval(function() {newWord(0);},
 				    newWordInterval);
+var intervalID = window.setInterval(function() {newWord(1);},
+				    newWordInterval*2);
 
 function randomWord() {
     var shelf = 0;
@@ -89,14 +91,14 @@ function randomWord() {
     return shelf_words[shelf][random_integer];
 }
 
-function newWord() {
+function newWord(shelf) {
     style = { font: "32px Arial",
 	      fill: "#ff0044",
 	      wordWrap: true,
 	      align: "center",
 	      backgroundColor: "#ffff00" };
 	
-    text = game.add.text(125, 0, randomWord(0), style);
+    text = game.add.text( (150*shelf) + 100, 0, randomWord(shelf), style);
     text.anchor.set(0.5);
     
     game.physics.arcade.enable([text]);
