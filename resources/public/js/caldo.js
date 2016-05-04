@@ -17,6 +17,7 @@ var paddle;
 var bricks;
 var newBrick;
 var brickInfo;
+var liveBricks;
 
 var scoreText;
 var score = 0;
@@ -24,6 +25,8 @@ var score = 0;
 var lives = 3;
 var livesText;
 var lifeLostText;
+
+
 
 function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -37,6 +40,7 @@ function preload() {
 }
 
 function initBricks() {
+    liveBricks = 0;
     brickInfo = {
 	width: 50,
 	height: 20,
@@ -68,9 +72,10 @@ function initBricks() {
 	    newBrick.body.immovable = true;
 	    newBrick.anchor.set(0.5);
 	    bricks.add(newBrick);
+	    liveBricks++;
 	}
     }
-
+    brickText.setText('Bricks: ' + liveBricks);
 }
 
 function create() {
@@ -94,16 +99,15 @@ function create() {
     paddle.anchor.set(0.5,1);
     paddle.body.immovable = true;
 
-    initBricks();
-
     textStyle = { font: '18px Arial', fill: '#0095DD' };
     
     scoreText = game.add.text(5,5,'Points: 0',textStyle);
     
 
-    brickText = game.add.text(200,5,'Bricks: ' + bricks.children.length,
-			      textStyle);
+    brickText = game.add.text(200,5,'Bricks: ',textStyle);
 
+    initBricks();
+    
     livesText = game.add.text(game.world.width-5, 5, 'Lives: ' + lives,
 			      textStyle);
     livesText.anchor.set(1,0);
@@ -137,18 +141,18 @@ function ballHitPaddle(ball,paddle) {
 }
 
 function ballHitBrick(ball,brick) {
-    brick.kill();
+    var killTween = game.add.tween(brick.scale);
+    killTween.to({x:0.25,y:0.25},150,Phaser.Easing.Linear.Out,true,10);
+    killTween.onComplete.addOnce(function() {
+	brick.kill();
+    }, this);
+    killTween.start();
     ball.animations.play('wobble');
     score += 10;
     scoreText.setText('Points: ' + score);
-    var count_alive = 0;
-    for (i = 0; i < bricks.children.length; i++) {
-	if (bricks.children[i].alive == true) {
-	    count_alive++;
-	}
-    }
-    brickText.setText('Bricks: ' + count_alive);
-    if (count_alive == 0) {
+    liveBricks--;
+    brickText.setText('Bricks: ' + liveBricks);
+    if (liveBricks == 0) {
 	alert('You won the game, congratulations!');
 	location.reload();
     }
