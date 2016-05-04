@@ -1,6 +1,6 @@
 phaser.min.js: "http://phaser.io - @photonstorm - (c) 2016 Photon Storm Ltd. */"
 
-ball.png: from https://github.com/end3r/Gamedev-Phaser-Content-Kit
+resources/public/image/*.png: from https://github.com/end3r/Gamedev-Phaser-Content-Kit
 
 Remainder:
 
