@@ -15,8 +15,8 @@ var game =
 var words;
 var word;
 var shelves;
-var num_words_at_a_time = 10;
-var num_shelves = 5;
+var num_words_at_a_time = 3;
+var num_shelves = 3;
 var text;
 
 // methods
@@ -46,28 +46,23 @@ function create() {
     
     words = game.add.group();
     for (c = 0; c < num_words_at_a_time; c++) {
-	word = game.add.sprite((38*c)+10,5*c,'word')
-	game.physics.enable(word,Phaser.Physics.ARCADE);
-	word.body.gravity.y = 100.0; // word is falling.
-	word.body.bounce.set(0.5);
-	word.body.collideWorldBounds = true;
-	words.add(word);
-    }
-
-    style = { font: "32px Arial",
+	
+	style = { font: "32px Arial",
 		  fill: "#ff0044",
 		  wordWrap: true,
 		  align: "center",
 		  backgroundColor: "#ffff00" };
-
-    text = game.add.text(100, 100, "parlare", style);
-    text.anchor.set(0.5);
-
-    game.physics.arcade.enable([text]);
-    text.body.velocity.setTo(0,0);
-    text.body.gravity.y = 100;
-    text.body.collideWorldBounds = true;
-    text.body.bounce.set(0.5);
+	
+	text = game.add.text(250 * c, 100, "parlare", style);
+	text.anchor.set(0.5);
+	
+	game.physics.arcade.enable([text]);
+	text.body.velocity.setTo(0,0);
+	text.body.gravity.y = 100;
+	text.body.collideWorldBounds = true;
+	text.body.bounce.set(0.5);
+	words.add(text);
+    }
 }
 
 function wordHitShelf(word,shelf) {
@@ -76,6 +71,5 @@ function wordHitShelf(word,shelf) {
 
 function update() {
     game.physics.arcade.collide(words,shelves,wordHitShelf);
-    game.physics.arcade.collide(text,shelves,wordHitShelf);
 }
 
