@@ -11,12 +11,15 @@ var game =
 	    update: update
 	});
 
-// globals
+// global constants
+var num_words_at_a_time = 3;
+var num_shelves = 3;
+var newWordInterval = 2000;
+
+// globals variables
 var words;
 var word;
 var shelves;
-var num_words_at_a_time = 3;
-var num_shelves = 3;
 var text;
 
 // methods
@@ -71,5 +74,25 @@ function wordHitShelf(word,shelf) {
 
 function update() {
     game.physics.arcade.collide(words,shelves,wordHitShelf);
+    game.physics.arcade.collide(words,words,wordHitShelf);
 }
 
+var intervalID = window.setInterval(newWord, newWordInterval);
+
+function newWord() {
+    style = { font: "32px Arial",
+	      fill: "#ff0044",
+	      wordWrap: true,
+	      align: "center",
+	      backgroundColor: "#ffff00" };
+	
+    text = game.add.text(125, 0, "parlare", style);
+    text.anchor.set(0.5);
+    
+    game.physics.arcade.enable([text]);
+    text.body.velocity.setTo(0,0);
+    text.body.gravity.y = 100;
+    text.body.collideWorldBounds = true;
+    text.body.bounce.set(0.5);
+    words.add(text);
+}
