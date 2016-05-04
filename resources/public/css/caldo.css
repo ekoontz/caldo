@@ -2,6 +2,26 @@ body {
     background: #eff;
 }
 
+#left {
+    width:10%;
+    float:left;
+}
+
+#header {
+    width:100%;
+    float:left;
+}
+
+#userinput {
+    width:100%;
+    float:left;
+}
+
+#header h1 {
+    font-family: sans-serif;
+    font-weight:bold;
+}
+
 canvas {
     float:left;
     background: #eee;
@@ -9,12 +29,8 @@ canvas {
     margin:1em;
 }
 
-#userinput {
-    float:left;
-    width:10%;
-}
-
 #gamecontainer {
+    margin-top:1em;
     margin-left:5%;
     width:80%;
     float:right;

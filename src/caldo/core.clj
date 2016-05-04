@@ -37,10 +37,12 @@
                                     :type "text/css"
                                     :href "/css/caldo.css"}]]
                             
-                     [:body [:div.header {:style "padding:1em"} "CALDO!"]
+                     [:body
+                      [:div#left
+                       [:div#header [:h1 "caldo!"]]
 
-                      [:div#userinput
-                       [:input {:name "userinput" :value "type stuff.."}]]
+                       [:div#userinput
+                        [:input {:name "userinput" :value "type stuff.."}]]]
 
                       [:div#gamecontainer " "]
                       
