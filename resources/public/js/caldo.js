@@ -79,6 +79,18 @@ function update() {
 
 var intervalID = window.setInterval(newWord, newWordInterval);
 
+function randomWord(shelf) {
+    var shelf_1_words = ["parlare",
+			 "controllare",
+			 "sprecare",
+			 "fermatare",
+			 "scrivere"];
+		 
+    var random_integer = Math.floor(Math.random() * 5);
+    
+    return words[random_integer];
+}
+
 function newWord() {
     style = { font: "32px Arial",
 	      fill: "#ff0044",
@@ -86,7 +98,7 @@ function newWord() {
 	      align: "center",
 	      backgroundColor: "#ffff00" };
 	
-    text = game.add.text(125, 0, "parlare", style);
+    text = game.add.text(125, 0, randomWord(1), style);
     text.anchor.set(0.5);
     
     game.physics.arcade.enable([text]);
