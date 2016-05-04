@@ -98,12 +98,27 @@ function create() {
 			      {font: '18px Arial',
 			       fill: '#0095dd'});
     
+
+    brickText = game.add.text(200,5,'Bricks: ' + bricks.children.length,
+			      {font: '18px Arial',
+			       fill: '#eddafaa'});
 }
 
 function ballHitBrick(ball,brick) {
     brick.kill();
     score += 10;
     scoreText.setText('Points: ' + score);
+    var count_alive = 0;
+    for (i = 0; i < bricks.children.length; i++) {
+	if (bricks.children[i].alive == true) {
+	    count_alive++;
+	}
+    }
+    brickText.setText('Bricks: ' + count_alive);
+    if (count_alive == 0) {
+	alert('You won the game, congratulations!');
+	location.reload();
+    }
 }
 
 function update() {
