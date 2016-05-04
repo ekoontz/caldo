@@ -3,9 +3,9 @@
 
 var game =
     new Phaser.Game(
-	480,320,
+	600,400,
 	Phaser.AUTO,
-	null, {
+	"gamecontainer", {
 	    preload: preload,
 	    create: create,
 	    update: update

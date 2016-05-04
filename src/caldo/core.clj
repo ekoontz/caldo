@@ -33,12 +33,17 @@
        {:status 200
         :headers {"Content-type" "text/html;charset=utf-8"}
         :body (html [:html [:head [:title "benvenuto a caldo!"]
-                                  [:style "* { padding: 0; margin: 0;}
-                                           canvas { background: #eee;
-                                                    display: block; 
-                                                    margin: 0 auto; }"]]
-                     [:body [:div {:style "padding:1em"} "CALDO"]
+                            [:link {:rel "stylesheet"
+                                    :type "text/css"
+                                    :href "/css/caldo.css"}]]
+                            
+                     [:body [:div.header {:style "padding:1em"} "CALDO!"]
 
+                      [:div#userinput
+                       [:input {:name "userinput" :value "type stuff.."}]]
+
+                      [:div#gamecontainer " "]
+                      
                       [:script {:type "text/javascript"
                                 :src "/js/phaser.min.js"}]
                       [:script {:type "text/javascript"

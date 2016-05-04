@@ -1,0 +1,21 @@
+body {
+    background: #eff;
+}
+
+canvas {
+    float:left;
+    background: #eee;
+    display:block;
+    margin:1em;
+}
+
+#userinput {
+    float:left;
+    width:10%;
+}
+
+#gamecontainer {
+    margin-left:5%;
+    width:80%;
+    float:right;
+}
