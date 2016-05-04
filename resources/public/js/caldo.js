@@ -33,8 +33,8 @@ function initBricks() {
 	width: 50,
 	height: 20,
 	count: {
-	    row: 3,
-	    col: 7
+	    col: 7,
+	    row: 3
 	},
 	offset: {
 	    top: 50,
@@ -49,10 +49,10 @@ function initBricks() {
 
 	    // create new brick and add to the group
 	    var brickX =
-		(r*(brickInfo.width+brickInfo.padding)) +
+		(c*(brickInfo.width+brickInfo.padding)) +
 		brickInfo.offset.left;
 	    var brickY =
-		(c*(brickInfo.height+brickInfo.padding)) +
+		(r*(brickInfo.height+brickInfo.padding)) +
 		brickInfo.offset.top;
 	    newBrick =
 		game.add.sprite(brickX, brickY, 'brick');
@@ -93,7 +93,12 @@ function create() {
     
 }
 
+function ballHitBrick(ball,brick) {
+    brick.kill();
+}
+
 function update() {
     game.physics.arcade.collide(ball,paddle);
+    game.physics.arcade.collide(ball,bricks,ballHitBrick);
     paddle.x = game.input.x || game.world.width*0.5;
 }
