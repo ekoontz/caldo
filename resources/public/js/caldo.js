@@ -12,8 +12,11 @@ var game =
 	});
 
 // globals
+var words;
 var word;
-var shelf;
+var shelves;
+var num_words_at_a_time = 10;
+var num_shelves = 5;
 
 // methods
 
@@ -29,20 +32,37 @@ function preload() {
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    word = game.add.sprite(20,5,'word')
-    shelf = game.add.sprite(20,250,'shelf')
+    shelves = game.add.group();
+    for (c = 0; c < num_shelves; c++) {
+	shelf = game.add.sprite((83*c)+9,game.world.height*0.9,'shelf')
+	game.physics.enable(shelf,Phaser.Physics.ARCADE);
+	shelf.body.gravity.y = 0; // shelf is floating in the air.
+	shelf.body.bounce.set(0.9);
+	shelf.body.collideWorldBounds = true;
+	shelf.body.immovable = true;
+	shelves.add(shelf);
+    }
+    
+    words = game.add.group();
+    for (c = 0; c < num_words_at_a_time; c++) {
+	word = game.add.sprite((38*c)+10,5*c,'word')
+	game.physics.enable(word,Phaser.Physics.ARCADE);
+	word.body.gravity.y = 100.0; // word is falling.
+	word.body.bounce.set(0.5);
+	word.body.collideWorldBounds = true;
+	words.add(word);
+    }
 
-    game.physics.enable(word,Phaser.Physics.ARCADE);
-    word.body.gravity.y = 100.0; // word is falling.
-    word.body.bounce.set(0.5);
-    word.body.collideWorldBounds = true;
+    style = { font: "32px Arial",
+		  fill: "#ff0044",
+		  wordWrap: true,
+		  align: "center",
+		  backgroundColor: "#ffff00" };
 
-    game.physics.enable(shelf,Phaser.Physics.ARCADE);
-    shelf.body.gravity.y = 0; // shelf is floating in the air.
-    shelf.body.bounce.set(0.5);
-    shelf.body.collideWorldBounds = true;
-    shelf.body.immovable = true;
+    text = game.add.text(100, 100, "parlare", style);
+    text.anchor.set(0.5);
 
+    
 }
 
 function wordHitShelf(word,shelf) {
@@ -50,6 +70,6 @@ function wordHitShelf(word,shelf) {
 }
 
 function update() {
-    game.physics.arcade.collide(word,shelf,wordHitShelf);
+    game.physics.arcade.collide(words,shelves,wordHitShelf);
 }
 
