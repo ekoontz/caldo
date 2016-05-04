@@ -17,6 +17,7 @@ var word;
 var shelves;
 var num_words_at_a_time = 10;
 var num_shelves = 5;
+var text;
 
 // methods
 
@@ -62,7 +63,11 @@ function create() {
     text = game.add.text(100, 100, "parlare", style);
     text.anchor.set(0.5);
 
-    
+    game.physics.arcade.enable([text]);
+    text.body.velocity.setTo(0,0);
+    text.body.gravity.y = 100;
+    text.body.collideWorldBounds = true;
+    text.body.bounce.set(0.5);
 }
 
 function wordHitShelf(word,shelf) {
@@ -71,5 +76,6 @@ function wordHitShelf(word,shelf) {
 
 function update() {
     game.physics.arcade.collide(words,shelves,wordHitShelf);
+    game.physics.arcade.collide(text,shelves,wordHitShelf);
 }
 
