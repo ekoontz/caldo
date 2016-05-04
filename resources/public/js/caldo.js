@@ -28,7 +28,7 @@ function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
-    game.stage.backgroundColor = "#edc";
+    game.stage.backgroundColor = "#ede";
     game.load.image('word','img/ball.png');
     game.load.image('shelf','img/brick.png');
 }
@@ -69,7 +69,7 @@ var intervalID = window.setInterval(function() {newWord(2);},
 var shelf_words = [
     ["io","tu","voi","noi"],
     ["parlare","controllare","sprecare","fermatare","scrivere"],
-    ["lui","lo","la","loro"]];
+    ["si","lo","la",]];
 
 function randomWord(shelf) {
     var random_integer = Math.floor(Math.random() * shelf_words[shelf].length);
@@ -78,10 +78,10 @@ function randomWord(shelf) {
 
 function newWord(shelf) {
     style = { font: "32px Arial",
-	      fill: "#ff0044",
+	      fill: "#ffee00",
 	      wordWrap: true,
 	      align: "center",
-	      backgroundColor: "#ffff00" };
+	      backgroundColor: "#ffffef" };
 	
     text = game.add.text( (150*shelf) + 125, 0, randomWord(shelf), style);
     text.anchor.set(0.5);
