@@ -41,45 +41,6 @@ function preload() {
     game.load.spritesheet('button','img/button.png',120,40);
 }
 
-function initBricks() {
-    liveBricks = 0;
-    brickInfo = {
-	width: 50,
-	height: 20,
-	count: {
-	    col: 7,
-	    row: 3
-	},
-	offset: {
-	    top: 50,
-	    left: 60
-	},
-	padding: 10
-    }
-
-    bricks = game.add.group();
-    for (c = 0; c < brickInfo.count.col; c++) {
-	for (r = 0; r < brickInfo.count.row; r++) {
-
-	    // create new brick and add to the group
-	    var brickX =
-		(c*(brickInfo.width+brickInfo.padding)) +
-		brickInfo.offset.left;
-	    var brickY =
-		(r*(brickInfo.height+brickInfo.padding)) +
-		brickInfo.offset.top;
-	    newBrick =
-		game.add.sprite(brickX, brickY, 'brick');
-	    game.physics.enable(newBrick, Phaser.Physics.ARCADE);
-	    newBrick.body.immovable = true;
-	    newBrick.anchor.set(0.5);
-	    bricks.add(newBrick);
-	    liveBricks++;
-	}
-    }
-    brickText.setText('Bricks: ' + liveBricks);
-}
-
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     ball = game.add.sprite(50,250,'ball');
@@ -125,6 +86,54 @@ function create() {
 				  1,0,2);
 }
 
+function update() {
+    game.physics.arcade.collide(ball,paddle,ballHitPaddle);
+    game.physics.arcade.collide(ball,bricks,ballHitBrick);
+    if (playing) {
+	paddle.x = game.input.x || game.world.width*0.5;
+    }
+}
+
+function initBricks() {
+    liveBricks = 0;
+    brickInfo = {
+	width: 50,
+	height: 20,
+	count: {
+	    col: 7,
+	    row: 3
+	},
+	offset: {
+	    top: 50,
+	    left: 60
+	},
+	padding: 10
+    }
+
+    bricks = game.add.group();
+    for (c = 0; c < brickInfo.count.col; c++) {
+	for (r = 0; r < brickInfo.count.row; r++) {
+
+	    // create new brick and add to the group
+	    var brickX =
+		(c*(brickInfo.width+brickInfo.padding)) +
+		brickInfo.offset.left;
+	    var brickY =
+		(r*(brickInfo.height+brickInfo.padding)) +
+		brickInfo.offset.top;
+	    newBrick =
+		game.add.sprite(brickX, brickY, 'brick');
+	    game.physics.enable(newBrick, Phaser.Physics.ARCADE);
+	    newBrick.body.immovable = true;
+	    newBrick.anchor.set(0.5);
+	    bricks.add(newBrick);
+	    liveBricks++;
+	}
+    }
+    brickText.setText('Bricks: ' + liveBricks);
+}
+
+
 function startGame() {
     startButton.destroy()
     ball.body.velocity.set(150,-150);
@@ -168,13 +177,5 @@ function ballHitBrick(ball,brick) {
     if (liveBricks == 0) {
 	alert('You won the game, congratulations!');
 	location.reload();
-    }
-}
-
-function update() {
-    game.physics.arcade.collide(ball,paddle,ballHitPaddle);
-    game.physics.arcade.collide(ball,bricks,ballHitBrick);
-    if (playing) {
-	paddle.x = game.input.x || game.world.width*0.5;
     }
 }
