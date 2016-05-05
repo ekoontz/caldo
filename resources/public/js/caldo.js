@@ -11,15 +11,15 @@ var game;
 function caldo() {
     // 1. populate page with HTML containers:
     var view = {
-	"beatles": [
+	"caldo": [
 	    { "firstName": "John", "lastName": "Lennon" }
 	],
 	"name": function () {
-	    return this.firstName + " " + this.lastName;
+	    return "caldo!";
 	}
     }
 
-    var mytemplate = "{{#beatles}}<div><b>{{name}}</b></div>{{/beatles}}";
+    var mytemplate = "{{#caldo}}<div style='border:1px dashed blue'><h1>{{name}}</h1></div>{{/caldo}}";
     var output = Mustache.render(mytemplate,view);
     $("#left").html(output);
 
