@@ -40,15 +40,12 @@
                             [:script {:type "text/javascript"
                                       :src "/js/caldo.js"}]
                             ]
-                     [:body {:onload "caldo();"}
-                      [:div#left
-                       [:div#header [:h1 "caldo!"]]
-                       ]
+                     ;; See ../../resources/public/js/caldo.js for definition of
+                     ;; the caldo() onload function: caldo().
+                     ;; See ../../resources/public/mst/caldo.mst for HTML template
+                     ;; used by caldo().
+                     [:body {:onload "caldo();"} ]])}))
 
-                      [:div#gamecontainer " "]
-
-                      [:div#userinput
-                       [:input {:name "userinput" :size "8"}]]]])}))
 (def app
   (handler/site 
    (friend/authenticate

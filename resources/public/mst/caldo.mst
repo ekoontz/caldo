@@ -1,0 +1,18 @@
+{{#caldo}}
+<div id="left">
+  <div id="header">
+   <h1>caldo</h1>
+  </div>
+
+</div>
+<div id="gamecontainer">
+
+</div>
+
+<div id="userinput">
+  <input size="40" name="userinput" >
+  </input>
+</div>
+
+
+{{/caldo}}
