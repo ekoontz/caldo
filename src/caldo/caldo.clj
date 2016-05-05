@@ -40,12 +40,8 @@
                             [:script {:type "text/javascript"
                                       :src "/js/caldo.js"}]
                             ]
-                     [:body {:onload "caldo();"}
+                     [:body {:onload "caldo();"} ]])}))
 
-                      [:div#gamecontainer " "]
-
-                      [:div#userinput
-                       [:input {:name "userinput" :size "8"}]]]])}))
 (def app
   (handler/site 
    (friend/authenticate
