@@ -15,19 +15,14 @@ function caldo() {
 	    {}
 	],
 	"name": function () {
-	    return "caldo!!";
+	    return "caldo";
 	}
     }
 
-    var mytemplate =
-	"{{#caldo}}" +
-	"<div id='left'>" +
-	"<div id='header' " +
-	"style='border:1px dashed blue'>" +
-	"<h1>{{name}}</h1></div></div>"
-	+ "{{/caldo}}";
-    var output = Mustache.render(mytemplate,view);
-    $("body").html(output);
+    $.get('/mst/caldo.mst', function(template) {
+	var output = Mustache.render(template,view);
+	$("body").html(output);
+    });
 
     // 2. start game
     game = new Phaser.Game(
