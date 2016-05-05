@@ -1,15 +1,41 @@
 // welcome to caldo!
-// note that phaser{.min}.js must be loaded for caldo.js to work.
+// Note that all of:
+//
+// - jquery{.min}.js
+// - mustachephaser{.min}.js
+// - phaser{.min}.js 
+//
+// must be loaded for caldo.js to work.
 
-var game =
-    new Phaser.Game(
-	600,400,
-	Phaser.AUTO,
-	"gamecontainer", {
-	    preload: preload,
-	    create: create,
-	    update: update
-	});
+var game;
+function caldo() {
+    // 1. populate page with HTML containers:
+    var view = {
+	"beatles": [
+	    { "firstName": "John", "lastName": "Lennon" },
+	    { "firstName": "Paul", "lastName": "McCartney" },
+	    { "firstName": "George", "lastName": "Harrison" },
+	    { "firstName": "Ringo", "lastName": "Starr" }
+	],
+	"name": function () {
+	    return "<b>" + this.firstName + " " + this.lastName + "</b>";
+	}
+    }
+
+    var mytemplate = "{{#beatles}}* {{name}}{{/beatles}}";
+    var output = Mustache.render(mytemplate,view);
+    $("#left").html(output);
+
+    // 2. start game
+    game = new Phaser.Game(
+	    600,400,
+	    Phaser.AUTO,
+	    "gamecontainer", {
+		preload: preload,
+		create: create,
+		update: update
+	    });
+}
 
 // global constants
 var num_words_at_a_time = 3;

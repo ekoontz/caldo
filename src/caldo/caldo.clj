@@ -21,11 +21,6 @@
    [ring.util.codec :as codec]
    [ring.util.response :as resp]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
-
 (defroutes main-routes
   (route/resources "/")
 
@@ -35,22 +30,25 @@
         :body (html [:html [:head [:title "benvenuto a caldo!"]
                             [:link {:rel "stylesheet"
                                     :type "text/css"
-                                    :href "/css/caldo.css"}]]
-                            
-                     [:body
+                                    :href "/css/caldo.css"}]
+                            [:script {:type "text/javascript"
+                                      :src "/js/jquery.min.js"}]
+                            [:script {:type "text/javascript"
+                                      :src "/js/mustache.min.js"}]
+                            [:script {:type "text/javascript"
+                                      :src "/js/phaser.min.js"}]
+                            [:script {:type "text/javascript"
+                                      :src "/js/caldo.js"}]
+                            ]
+                     [:body {:onload "caldo();"}
                       [:div#left
                        [:div#header [:h1 "caldo!"]]
                        ]
 
                       [:div#gamecontainer " "]
-                       [:div#userinput
-                        [:input {:name "userinput" :size "8"}]]
-                       
-                      [:script {:type "text/javascript"
-                                :src "/js/phaser.min.js"}]
-                      [:script {:type "text/javascript"
-                                :src "/js/caldo.js"}]]])}))
 
+                      [:div#userinput
+                       [:input {:name "userinput" :size "8"}]]]])}))
 (def app
   (handler/site 
    (friend/authenticate
