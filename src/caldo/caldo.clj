@@ -40,6 +40,10 @@
                             [:script {:type "text/javascript"
                                       :src "/js/caldo.js"}]
                             ]
+                     ;; See ../../resources/public/js/caldo.js for definition of
+                     ;; the caldo() onload function: caldo().
+                     ;; See ../../resources/public/mst/caldo.mst for HTML template
+                     ;; used by caldo().
                      [:body {:onload "caldo();"} ]])}))
 
 (def app
