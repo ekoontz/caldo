@@ -34,6 +34,7 @@ canvas {
     margin-top:1em;
     margin-left:5%;
     width:80%;
+    height:80%;
     float:right;
 }
 
@@ -48,6 +49,12 @@ input {
 }
 
 #userinput {
-    width:100%;
+    padding-top:0.5em;
+    margin-right:30%;
     float:left;
+}
+
+#userinfo input {
+    float:left;
+    padding:1em;
 }
