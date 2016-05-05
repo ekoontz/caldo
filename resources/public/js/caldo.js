@@ -41,14 +41,18 @@ function create() {
 	shelf = game.add.sprite((150*c)+100,game.world.height*0.9,'shelf')
 	game.physics.enable(shelf,Phaser.Physics.ARCADE);
 	shelf.body.gravity.y = 0; // shelf is floating in the air.
-	shelf.body.bounce.set(0.9);
+	shelf.body.bounce.set(0.5);
 	shelf.body.collideWorldBounds = true;
 	shelf.body.immovable = true;
 	shelves.add(shelf);
     }
     
     words = game.add.group();
+    newWord(0);
+    newWord(1);
+    newWord(2);
 }
+
 
 function wordHitShelf(word,shelf) {
     foo = 32;
@@ -61,7 +65,8 @@ function update() {
 
 var intervalID = window.setInterval(function() {newWord(0);},
 				    newWordInterval);
-if (true) { // defer until later
+
+if (false) { // defer until later
     var intervalID = window.setInterval(function() {newWord(1);},
 					newWordInterval*2);
 }
@@ -82,19 +87,22 @@ function randomWord(shelf) {
 }
 
 function newWord(shelf) {
-    style = { font: "32px Arial",
-	      fill: "#0055ee",
-	      wordWrap: true,
-	      align: "center",
-	      backgroundColor: "#ffffef" };
+    if (words.length < num_words_at_a_time) {
+	style = { font: "32px Arial",
+		  fill: "#0055ee",
+		  wordWrap: true,
+		  align: "center",
+		  backgroundColor: "#ffffef" };
 	
-    text = game.add.text( (150*shelf) + 125, 0, randomWord(shelf), style);
-    text.anchor.set(0.5);
-    
-    game.physics.arcade.enable([text]);
-    text.body.velocity.setTo(0,0);
-    text.body.gravity.y = 200;
-    text.body.collideWorldBounds = true;
-    text.body.bounce.set(0.99);
-    words.add(text);
+	text = game.add.text( (150*shelf) + 125, 0, randomWord(shelf), style);
+	text.anchor.set(0.5);
+	
+	game.physics.arcade.enable([text]);
+	text.body.velocity.setTo(0,0);
+	text.body.gravity.y = 500;
+	text.body.collideWorldBounds = true;
+	text.body.bounce.set(Math.random());
+	words.add(text);
+    }
 }
+    

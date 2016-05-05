@@ -43,9 +43,8 @@
                        ]
 
                       [:div#gamecontainer " "]
-
                        [:div#userinput
-                        [:input {:name "userinput" :value ""}]]
+                        [:input {:name "userinput" :size "8"}]]
                        
                       [:script {:type "text/javascript"
                                 :src "/js/phaser.min.js"}]
