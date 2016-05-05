@@ -24,7 +24,16 @@ function caldo() {
 	$("body").html(output);
     });
 
-    // 2. start game
+    // 2. connect input element to game.
+    $("#userinput").keypress(function() {
+	console.log("got here.");
+    });
+
+
+    $("#userinput").val("hello");
+    $("#userinput").focus();
+    
+    // 3. start game
     game = new Phaser.Game(
 	    600,400,
 	    Phaser.AUTO,
@@ -33,7 +42,13 @@ function caldo() {
 		create: create,
 		update: update
 	    });
+
+    var intervalID = window.setInterval(function() {newWord(0);},
+					newWordInterval);
+    
 }
+
+
 
 // global constants
 var num_words_at_a_time = 3;
@@ -45,6 +60,11 @@ var words;
 var word;
 var shelves;
 var text;
+
+var shelf_words = [
+    ["io","tu","voi","noi"],
+    ["parlare","controllare","sprecare","fermatare","scrivere"],
+    ["si","lo","la",]];
 
 // methods
 
@@ -86,24 +106,6 @@ function update() {
     game.physics.arcade.collide(words,shelves,wordHitShelf);
     game.physics.arcade.collide(words,words,wordHitShelf);
 }
-
-var intervalID = window.setInterval(function() {newWord(0);},
-				    newWordInterval);
-
-if (false) { // defer until later
-    var intervalID = window.setInterval(function() {newWord(1);},
-					newWordInterval*2);
-}
-
-if (false) {
-    var intervalID = window.setInterval(function() {newWord(2);},
-					newWordInterval*3);
-}
-    
-var shelf_words = [
-    ["io","tu","voi","noi"],
-    ["parlare","controllare","sprecare","fermatare","scrivere"],
-    ["si","lo","la",]];
 
 function randomWord(shelf) {
     var random_integer = Math.floor(Math.random() * shelf_words[shelf].length);

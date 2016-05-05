@@ -9,9 +9,8 @@
 
 </div>
 
-<div id="userinput">
-  <input size="30" name="userinput" >
-  </input>
+<div id="userinputdiv">
+   <input size="30" id="userinput"> </input>
 </div>
 
 
