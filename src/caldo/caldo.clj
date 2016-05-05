@@ -41,9 +41,6 @@
                                       :src "/js/caldo.js"}]
                             ]
                      [:body {:onload "caldo();"}
-                      [:div#left
-                       [:div#header [:h1 "caldo!"]]
-                       ]
 
                       [:div#gamecontainer " "]
 

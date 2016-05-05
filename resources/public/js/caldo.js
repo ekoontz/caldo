@@ -12,16 +12,22 @@ function caldo() {
     // 1. populate page with HTML containers:
     var view = {
 	"caldo": [
-	    { "firstName": "John", "lastName": "Lennon" }
+	    {}
 	],
 	"name": function () {
-	    return "caldo!";
+	    return "caldo!!";
 	}
     }
 
-    var mytemplate = "{{#caldo}}<div style='border:1px dashed blue'><h1>{{name}}</h1></div>{{/caldo}}";
+    var mytemplate =
+	"{{#caldo}}" +
+	"<div id='left'>" +
+	"<div id='header' " +
+	"style='border:1px dashed blue'>" +
+	"<h1>{{name}}</h1></div></div>"
+	+ "{{/caldo}}";
     var output = Mustache.render(mytemplate,view);
-    $("#left").html(output);
+    $("body").html(output);
 
     // 2. start game
     game = new Phaser.Game(
