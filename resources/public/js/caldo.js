@@ -11,14 +11,11 @@ var game;
 function caldo() {
     // 1. populate page with HTML containers:
     var view = {
-	"beatles": [
-	    { "firstName": "John", "lastName": "Lennon" },
-	    { "firstName": "Paul", "lastName": "McCartney" },
-	    { "firstName": "George", "lastName": "Harrison" },
-	    { "firstName": "Ringo", "lastName": "Starr" }
+	"caldo": [
+	    { "firstName": "John", "lastName": "Lennon" }
 	],
 	"name": function () {
-	    return "<b>" + this.firstName + " " + this.lastName + "</b>";
+	    return "caldo!!";
 	}
     }
 
