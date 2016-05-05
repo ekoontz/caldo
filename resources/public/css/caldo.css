@@ -2,8 +2,8 @@ body {
     background: #eff;
 }
 
-#left {
-    width:10%;
+#userinput {
+    width:20%;
     float:left;
 }
 
@@ -34,4 +34,8 @@ canvas {
     margin-left:5%;
     width:80%;
     float:right;
+}
+
+input {
+    font-size:48px;
 }

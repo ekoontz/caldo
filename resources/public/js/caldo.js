@@ -14,7 +14,7 @@ var game =
 // global constants
 var num_words_at_a_time = 3;
 var num_shelves = 3;
-var newWordInterval = 2000;
+var newWordInterval = 4000;
 
 // globals variables
 var words;
@@ -61,11 +61,16 @@ function update() {
 
 var intervalID = window.setInterval(function() {newWord(0);},
 				    newWordInterval);
-var intervalID = window.setInterval(function() {newWord(1);},
-				    newWordInterval*2);
-var intervalID = window.setInterval(function() {newWord(2);},
-				    newWordInterval*3);
+if (true) { // defer until later
+    var intervalID = window.setInterval(function() {newWord(1);},
+					newWordInterval*2);
+}
 
+if (false) {
+    var intervalID = window.setInterval(function() {newWord(2);},
+					newWordInterval*3);
+}
+    
 var shelf_words = [
     ["io","tu","voi","noi"],
     ["parlare","controllare","sprecare","fermatare","scrivere"],
@@ -78,7 +83,7 @@ function randomWord(shelf) {
 
 function newWord(shelf) {
     style = { font: "32px Arial",
-	      fill: "#ffee00",
+	      fill: "#0055ee",
 	      wordWrap: true,
 	      align: "center",
 	      backgroundColor: "#ffffef" };
@@ -88,8 +93,8 @@ function newWord(shelf) {
     
     game.physics.arcade.enable([text]);
     text.body.velocity.setTo(0,0);
-    text.body.gravity.y = 100;
+    text.body.gravity.y = 200;
     text.body.collideWorldBounds = true;
-    text.body.bounce.set(0.5);
+    text.body.bounce.set(0.99);
     words.add(text);
 }

@@ -40,12 +40,13 @@
                      [:body
                       [:div#left
                        [:div#header [:h1 "caldo!"]]
-
-                       [:div#userinput
-                        [:input {:name "userinput" :value "type stuff.."}]]]
+                       ]
 
                       [:div#gamecontainer " "]
-                      
+
+                       [:div#userinput
+                        [:input {:name "userinput" :value ""}]]
+                       
                       [:script {:type "text/javascript"
                                 :src "/js/phaser.min.js"}]
                       [:script {:type "text/javascript"
