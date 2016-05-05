@@ -1,4 +1,4 @@
-(ns caldo.core
+(ns caldo.caldo
   (:use
    [hiccup core page]
    [ring.util.codec :as codec])

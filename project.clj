@@ -32,7 +32,7 @@
   :resource-paths ["resources"]
   
   ;; caldo.core/app is defined in src/caldo/core.clj.
-  :ring {:handler caldo.core/app})
+  :ring {:handler caldo.caldo/app})
 
 
 
