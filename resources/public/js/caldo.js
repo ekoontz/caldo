@@ -12,17 +12,14 @@ function caldo() {
     // 1. populate page with HTML containers:
     var view = {
 	"beatles": [
-	    { "firstName": "John", "lastName": "Lennon" },
-	    { "firstName": "Paul", "lastName": "McCartney" },
-	    { "firstName": "George", "lastName": "Harrison" },
-	    { "firstName": "Ringo", "lastName": "Starr" }
+	    { "firstName": "John", "lastName": "Lennon" }
 	],
 	"name": function () {
-	    return "<b>" + this.firstName + " " + this.lastName + "</b>";
+	    return this.firstName + " " + this.lastName;
 	}
     }
 
-    var mytemplate = "{{#beatles}}* {{name}}{{/beatles}}";
+    var mytemplate = "{{#beatles}}<div><b>{{name}}</b></div>{{/beatles}}";
     var output = Mustache.render(mytemplate,view);
     $("#left").html(output);
 
