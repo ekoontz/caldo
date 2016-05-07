@@ -9,32 +9,35 @@
 
 var game;
 function caldo() {
-    // 1. populate page with HTML containers:
-    var view = {
-	"caldo": [
-	    {}
-	],
-	"name": function () {
-	    return "caldo";
-	}
-    }
-
     $.get('/mst/caldo.mst', function(template) {
-	var output = Mustache.render(template,view);
+	view = {
+	    "caldo": [
+		{}
+	    ],
+	    "caldo": [
+		{}
+	    ],
+	    "name": function () {
+		return "caldo";
+	    }
+	}
+
+	// 1. populate page with HTML:
+	output = Mustache.render(template,view);
 	$("body").html(output);
-    });
 
-    // 2. connect input element to game.
-    $("#userinput").keypress(function() {
-	console.log("got here.");
-    });
+	// 2. connect input element to game.
+	$("#userinput").keypress(function() {
+	    console.log("got here.");
+	});
 
 
-    $("#userinput").val("hello");
-    $("#userinput").focus();
+	// 3. initialize input elements
+	$("#userinput").val("");
+	$("#userinput").focus();
     
-    // 3. start game
-    game = new Phaser.Game(
+	// 4. start game
+	game = new Phaser.Game(
 	    600,400,
 	    Phaser.AUTO,
 	    "gamecontainer", {
@@ -43,12 +46,10 @@ function caldo() {
 		update: update
 	    });
 
-    var intervalID = window.setInterval(function() {newWord(0);},
-					newWordInterval);
-    
+	var intervalID = window.setInterval(function() {newWord(0);},
+					    newWordInterval);
+    });
 }
-
-
 
 // global constants
 var num_words_at_a_time = 3;
