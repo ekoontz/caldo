@@ -59,9 +59,16 @@ function remove_from_blocks(roots) {
 	root = roots[i];
 	for (c = 0; c < num_blocks; c++) {
 	    block = words.children[c];
-	    block_text = block._text; // TODO: is this best practices per Phaser docs?
-	    if (block_text === root) {
-		block.kill();
+	    if (block.alive == true) {
+		block_text = block._text; // TODO: is this best practices per Phaser docs to access "_" fields?
+		if (block_text === root) {
+		    killTween = game.add.tween(block.scale);
+		    killTween.to({x:0.25,y:0.25},150,Phaser.Easing.Linear.Out,true,10);
+		    killTween.onComplete.addOnce(function() {
+			block.kill();
+		    }, this);
+		    killTween.start();
+		}
 	    }
 	}
     }
