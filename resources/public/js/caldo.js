@@ -12,7 +12,7 @@
 // global constants
 var num_words_at_a_time = 10;
 var num_shelves = 2;
-var newWordInterval = [4000,5000];
+var newWordInterval = [3000,4000];
 var logging_level = DEBUG;
 // global variables
 var words;
