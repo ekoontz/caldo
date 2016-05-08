@@ -15,17 +15,22 @@ var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = DEBUG;
 var hang_shelves = false;
+
+// TODO: load from server.
+var shelf_words = [
+    ["io","tu","lui","lei","noi","voi","loro"],
+    ["avere","fare","lavorare","leggere","mangiare",
+     "studiare","suonare","tornare"],
+    ["si","lo","la"]];
+
 // global variables
 var words;
 var word;
 var shelves;
 var text;
 var game;
-var shelf_words = [
-    ["io","tu","lui","lei","noi","voi","loro"],
-    ["avere","fare","lavorare","leggere","mangiare",
-     "studiare","suonare","tornare"],
-    ["si","lo","la"]];
+var scoreText;
+var score = 0;
 
 // methods
 function respond_to_user_input(event) {
@@ -78,6 +83,9 @@ function kill_block(brick) {
 	brick.kill();
     }, this);
     killTween.start();
+    score += 10;
+    scoreText.setText('Points: ' + score);
+
 }
 
 function caldo() {
@@ -135,6 +143,9 @@ function preload() {
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    textStyle = { font: '18px Arial', fill: '#0095DD' };
+    scoreText = game.add.text(5,5,'Points: 0',textStyle);
+    
     shelves = game.add.group();
     words = game.add.group();
     for (c = 0; c < num_shelves; c++) {
