@@ -14,6 +14,7 @@ var num_words_at_a_time = 10;
 var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = DEBUG;
+var hang_shelves = false;
 // global variables
 var words;
 var word;
@@ -136,17 +137,18 @@ function create() {
     shelves = game.add.group();
     words = game.add.group();
     for (c = 0; c < num_shelves; c++) {
-	shelf = game.add.sprite((150*c)+100,game.world.height*0.9,'shelf')
-	game.physics.enable(shelf,Phaser.Physics.ARCADE);
-	shelf.body.gravity.y = 0; // shelf is floating in the air.
-	shelf.body.bounce.set(0.5);
-	shelf.body.collideWorldBounds = true;
-	shelf.body.immovable = true;
-	shelves.add(shelf);
+	if (hang_shelves == true) {
+	    shelf = game.add.sprite((150*c)+100,game.world.height*0.9,'shelf')
+	    game.physics.enable(shelf,Phaser.Physics.ARCADE);
+	    shelf.body.gravity.y = 0; // shelf is floating in the air.
+	    shelf.body.bounce.set(0.5);
+	    shelf.body.collideWorldBounds = true;
+	    shelf.body.immovable = true;
+	    shelves.add(shelf);
+	}
 	newWord(c);
     }
 }
-
 
 function wordHitShelf(word,shelf) {
     foo = 32;
