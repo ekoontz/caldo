@@ -12,7 +12,7 @@
 // global constants
 var num_words_at_a_time = 10;
 var num_shelves = 2;
-var newWordInterval = [4000,8000];
+var newWordInterval = [4000,5000];
 var logging_level = DEBUG;
 // global variables
 var words;
@@ -37,8 +37,12 @@ function respond_to_user_input(event) {
 	    data: {expr: $("#userinput").val()},
             dataType: "json",
             url: "/say"}).done(function(content) {
-		log(DEBUG,"response to /say: " + content);
 		roots = content.roots;
+		if (roots == undefined) {
+		    log(INFO,"server returned no roots for input: '" + $("#userinput").val());
+		} else {
+		    log(INFO,"response from server: found: " + roots.length + " roots.");
+		}
 
 		remove_from_blocks(roots);
 
@@ -48,10 +52,18 @@ function respond_to_user_input(event) {
     }
 }
 
-function remove_from_blocks(words) {
-    num_words = words.length;
-    for (i = 0; i < num_words; i++) {
-	word = words[i];
+function remove_from_blocks(roots) {
+    num_roots = roots.length;
+    num_blocks = words.children.length;
+    for (i = 0; i < num_roots; i++) {
+	root = roots[i];
+	for (c = 0; c < num_blocks; c++) {
+	    block = words.children[c];
+	    block_text = block._text; // TODO: is this best practices per Phaser docs?
+	    if (block_text === root) {
+		block.kill();
+	    }
+	}
     }
 }
 
@@ -140,7 +152,17 @@ function randomWord(shelf) {
 }
 
 function newWord(shelf) {
-    if (words.length < num_words_at_a_time) {
+    // count the number of alive words: TODO: do this with a global variable.
+    alive_words = 0;
+    num_blocks = words.children.length;
+    for (c = 0; c < num_blocks; c++) {
+	block = words.children[c];
+	if (block.alive == true) {
+	    alive_words++;
+	}
+    }
+
+    if (alive_words < num_words_at_a_time) {
 	style = { font: "32px Arial",
 		  fill: "#0055ee",
 		  wordWrap: true,
