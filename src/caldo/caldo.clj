@@ -86,11 +86,7 @@
   (set
    (mapcat (fn [parse]
              [(get-in parse [:comp :italiano :italiano])
-              (get-in parse [:root :italiano :italiano])])
+              (if (get-in parse [:root :italiano :infinitive])
+                (get-in parse [:root :italiano :infinitive])
+                (get-in parse [:root :italiano :italiano]))])
            parses)))
-
-
-
-
-             
-                 

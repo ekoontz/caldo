@@ -3,7 +3,7 @@
   :url "https://caldo.verbcoach.com"
   :license {:name "GPL 3"
             :url "http://gnu.org/"}
-  :dependencies [[babel "1.2.1"]
+  :dependencies [[babel "1.2.2"]
                  [dag_unify "1.1.0"]
                  [digest "1.4.4"]
                  [environ "1.0.0"]
