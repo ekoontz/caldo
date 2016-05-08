@@ -54,18 +54,12 @@
   (GET "/say" request
        {:status 200
         :headers {"Content-type" "application/json;charset=utf-8"}
-        :body (let [to (:to (:params request))
-                    expr (:expr (:params request))
-                    parsed (reduce concat (map :parses (parse expr)))
+        :body (let [parsed (reduce concat (map :parses (parse expr)))
                     roots (get-roots parsed)
-                    debug (log/info (str "parses: " (count parsed)))
-                    response (str "ciao; tu hai detto: '" expr "'")]
-                (log/info (str "client is talking to: " to))
-                (log/info (str " and saying: " expr))
-                (log/info (str "response: " response))
+                    debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
                 (log/info (str "roots " roots))
-                (write-str {:yousaid expr
-                            :response response}))}))
+                (write-str {:roots roots}))}))
+
 (def app
   (handler/site 
    (friend/authenticate
