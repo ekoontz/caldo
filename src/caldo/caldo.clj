@@ -6,6 +6,7 @@
    [caldo.auth.google :as google-auth]
    [cemerick.friend :as friend]
    [cemerick.friend [workflows :as workflows]]
+   [clojure.data.json :refer [write-str]]
    [clojure.java.io :as io]
    [clojure.tools.logging :as log]
    [compojure.core :refer [context defroutes GET PUT POST DELETE ANY]]
@@ -38,14 +39,27 @@
                             [:script {:type "text/javascript"
                                       :src "/js/phaser.min.js"}]
                             [:script {:type "text/javascript"
+                                      :src "/js/log4.js"}]
+                            [:script {:type "text/javascript"
                                       :src "/js/caldo.js"}]
                             ]
                      ;; See ../../resources/public/js/caldo.js for definition of
                      ;; the caldo() onload function: caldo().
                      ;; See ../../resources/public/mst/caldo.mst for HTML template
                      ;; used by caldo().
-                     [:body {:onload "caldo();"} ]])}))
+                     [:body {:onload "caldo();"} ]])})
 
+  (GET "/say" request
+       {:status 200
+        :headers {"Content-type" "application/json;charset=utf-8"}
+        :body (let [to (:to (:params request))
+                    expr (:expr (:params request))
+                    response (str "ciao; tu hai detto: '" expr "'")]
+                (log/info (str "client is talking to: " to))
+                (log/info (str " and saying: " expr))
+                (log/info (str "response: " response))
+                (write-str {:yousaid expr
+                            :response response}))}))
 (def app
   (handler/site 
    (friend/authenticate

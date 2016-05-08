@@ -4,10 +4,46 @@
 // - jquery{.min}.js
 // - mustachephaser{.min}.js
 // - phaser{.min}.js 
+// - log4.js
 //
 // must be loaded for caldo.js to work.
 
+
+// global constants
+var num_words_at_a_time = 3;
+var num_shelves = 3;
+var newWordInterval = 4000;
+var logging_level = DEBUG;
+// global variables
+var words;
+var word;
+var shelves;
+var text;
 var game;
+var shelf_words = [
+    ["io","tu","voi","noi"],
+    ["parlare","controllare","sprecare","fermatare","scrivere"],
+    ["si","lo","la",]];
+
+// methods
+function respond_to_user_input(event) {
+    console.log("GOT HERE: user input: " + event);
+    key_pressed = event.which;
+    if (key_pressed == 13) {
+	// send to language server:
+	$.ajax({
+	    cache: false,
+	    type: "GET",
+	    data: {expr: $("#userinput").val()},
+            dataType: "json",
+            url: "/say"}).done(function(content) {
+		log(DEBUG,"response to /say: " + content);
+		$("#userinput").val("");
+		$("#userinput").focus();
+	    });
+    }
+}
+
 function caldo() {
     $.get('/mst/caldo.mst', function(template) {
 	view = {
@@ -27,10 +63,7 @@ function caldo() {
 	$("body").html(output);
 
 	// 2. connect input element to game.
-	$("#userinput").keypress(function() {
-	    console.log("got here.");
-	});
-
+	$("#userinput").keypress(respond_to_user_input);
 
 	// 3. initialize input elements
 	$("#userinput").val("");
@@ -50,24 +83,6 @@ function caldo() {
 					    newWordInterval);
     });
 }
-
-// global constants
-var num_words_at_a_time = 3;
-var num_shelves = 3;
-var newWordInterval = 4000;
-
-// globals variables
-var words;
-var word;
-var shelves;
-var text;
-
-var shelf_words = [
-    ["io","tu","voi","noi"],
-    ["parlare","controllare","sprecare","fermatare","scrivere"],
-    ["si","lo","la",]];
-
-// methods
 
 function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
