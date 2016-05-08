@@ -10,9 +10,9 @@
 
 
 // global constants
-var num_words_at_a_time = 3;
-var num_shelves = 3;
-var newWordInterval = 4000;
+var num_words_at_a_time = 10;
+var num_shelves = 2;
+var newWordInterval = [4000,8000];
 var logging_level = DEBUG;
 // global variables
 var words;
@@ -21,13 +21,13 @@ var shelves;
 var text;
 var game;
 var shelf_words = [
-    ["io","tu","voi","noi"],
-    ["parlare","controllare","sprecare","fermatare","scrivere"],
-    ["si","lo","la",]];
+    ["io","tu","lui","lei","noi","voi","loro"],
+    ["avere","fare","lavorare","leggere","mangiare",
+     "studiare","suonare","tornare"],
+    ["si","lo","la"]];
 
 // methods
 function respond_to_user_input(event) {
-    console.log("GOT HERE: user input: " + event);
     key_pressed = event.which;
     if (key_pressed == 13) {
 	// send to language server:
@@ -38,9 +38,20 @@ function respond_to_user_input(event) {
             dataType: "json",
             url: "/say"}).done(function(content) {
 		log(DEBUG,"response to /say: " + content);
+		roots = content.roots;
+
+		remove_from_blocks(roots);
+
 		$("#userinput").val("");
 		$("#userinput").focus();
 	    });
+    }
+}
+
+function remove_from_blocks(words) {
+    num_words = words.length;
+    for (i = 0; i < num_words; i++) {
+	word = words[i];
     }
 }
 
@@ -79,8 +90,11 @@ function caldo() {
 		update: update
 	    });
 
-	var intervalID = window.setInterval(function() {newWord(0);},
-					    newWordInterval);
+	// TODO: loop over num_shelves
+	window.setInterval(function() {newWord(0);},
+			   newWordInterval[0]);
+	window.setInterval(function() {newWord(1);},
+			   newWordInterval[1]);
     });
 }
 
@@ -97,6 +111,7 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     shelves = game.add.group();
+    words = game.add.group();
     for (c = 0; c < num_shelves; c++) {
 	shelf = game.add.sprite((150*c)+100,game.world.height*0.9,'shelf')
 	game.physics.enable(shelf,Phaser.Physics.ARCADE);
@@ -105,12 +120,8 @@ function create() {
 	shelf.body.collideWorldBounds = true;
 	shelf.body.immovable = true;
 	shelves.add(shelf);
+	newWord(c);
     }
-    
-    words = game.add.group();
-    newWord(0);
-    newWord(1);
-    newWord(2);
 }
 
 
@@ -143,7 +154,7 @@ function newWord(shelf) {
 	text.body.velocity.setTo(0,0);
 	text.body.gravity.y = 500;
 	text.body.collideWorldBounds = true;
-	text.body.bounce.set(Math.random());
+	text.body.bounce.set(0.5 + (.1 * (Math.random())));
 	words.add(text);
     }
 }
