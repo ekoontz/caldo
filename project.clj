@@ -3,8 +3,8 @@
   :url "https://caldo.verbcoach.com"
   :license {:name "GPL 3"
             :url "http://gnu.org/"}
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [babel "1.1.2"]
+  :dependencies [[babel "1.2.1"]
+                 [dag_unify "1.1.0"]
                  [digest "1.4.4"]
                  [environ "1.0.0"]
                  [friend-oauth2 "0.1.3"]
@@ -14,6 +14,7 @@
                                                     com.sun.jmx/jmxri]]
                  [http-kit "2.1.16"]
                  [org.apache.httpcomponents/httpclient "4.3.5"]
+                 [org.clojure/clojure "1.7.0"]
                  [org.clojure/data.json "0.2.5"]
                  [org.clojure/tools.logging "0.2.6"]
                  [org.clojure/tools.nrepl "0.2.7"]
