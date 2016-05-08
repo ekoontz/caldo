@@ -8,6 +8,7 @@
    [cemerick.friend [workflows :as workflows]]
    [clojure.data.json :refer [write-str]]
    [clojure.java.io :as io]
+   [clojure.string :as string]
    [clojure.tools.logging :as log]
    [compojure.core :refer [context defroutes GET PUT POST DELETE ANY]]
    [compojure.route :as route]
@@ -54,10 +55,11 @@
   (GET "/say" request
        {:status 200
         :headers {"Content-type" "application/json;charset=utf-8"}
-        :body (let [parsed (reduce concat (map :parses (parse expr)))
+        :body (let [expr (:expr (:params request))
+                    parsed (reduce concat (map :parses (parse expr)))
                     roots (get-roots parsed)
                     debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
-                (log/info (str "roots " roots))
+                (log/info (str "roots " (string/join ";" roots)))
                 (write-str {:roots roots}))}))
 
 (def app
