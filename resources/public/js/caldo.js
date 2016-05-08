@@ -62,16 +62,20 @@ function remove_from_blocks(roots) {
 	    if (block.alive == true) {
 		block_text = block._text; // TODO: is this best practices per Phaser docs to access "_" fields?
 		if (block_text === root) {
-		    killTween = game.add.tween(block.scale);
-		    killTween.to({x:0.25,y:0.25},150,Phaser.Easing.Linear.Out,true,10);
-		    killTween.onComplete.addOnce(function() {
-			block.kill();
-		    }, this);
-		    killTween.start();
+		    kill_block(block);
 		}
 	    }
 	}
     }
+}
+
+function kill_block(brick) {
+    var killTween = game.add.tween(brick.scale);
+    killTween.to({x:0.25,y:0.25},150,Phaser.Easing.Linear.Out,true,10);
+    killTween.onComplete.addOnce(function() {
+	brick.kill();
+    }, this);
+    killTween.start();
 }
 
 function caldo() {
