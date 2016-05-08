@@ -64,6 +64,7 @@ function remove_from_blocks(roots) {
 		block_text = block._text; // TODO: is this best practices per Phaser docs to access "_" fields?
 		if (block_text === root) {
 		    kill_block(block);
+		    break; // only kill one block that matches the text; otherwise game is too easy.
 		}
 	    }
 	}
