@@ -59,7 +59,7 @@
                     parsed (reduce concat (map :parses (parse expr)))
                     roots (get-roots parsed)
                     debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
-                (log/info (str "roots " (string/join ";" roots)))
+                (log/info (str "roots: " (string/join ";" roots)))
                 (write-str {:roots roots}))}))
 
 (def app
