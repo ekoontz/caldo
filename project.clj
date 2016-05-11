@@ -3,8 +3,8 @@
   :url "https://caldo.verbcoach.com"
   :license {:name "GPL 3"
             :url "http://gnu.org/"}
-  :dependencies [[babel "1.2.2"]
-                 [dag_unify "1.1.0"]
+  :dependencies [[babel "1.2.4"]
+                 [dag_unify "1.1.1"]
                  [digest "1.4.4"]
                  [environ "1.0.0"]
                  [friend-oauth2 "0.1.3"]
