@@ -94,9 +94,6 @@ function caldo() {
 	    "caldo": [
 		{}
 	    ],
-	    "caldo": [
-		{}
-	    ],
 	    "name": function () {
 		return "caldo";
 	    }
