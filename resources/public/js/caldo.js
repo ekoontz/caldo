@@ -171,7 +171,7 @@ function create() {
 }
 
 function wordHitShelf(word,shelf) {
-    log(DEBUG,"a word:" + word + " hit a shelf: " + shelf);
+    log(TRACE,"a word:" + word + " hit a shelf: " + shelf);
 }
 
 function update() {
