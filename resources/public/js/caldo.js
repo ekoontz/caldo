@@ -154,42 +154,7 @@ function create() {
 
     textStyle = { font: '18px Arial', fill: '#eeffDD' };
     scoreText = game.add.text(5,5,'Points: 0',textStyle);
-    
-    shelves = game.add.group();
-    words = game.add.group();
-    for (c = 0; c < num_shelves; c++) {
-	if (hang_shelves == true) {
-	    shelf = game.add.sprite((150*c)+100,game.world.height*0.9,'shelf')
-	    game.physics.enable(shelf,Phaser.Physics.ARCADE);
-	    shelf.body.gravity.y = 0; // shelf is floating in the air.
-	    shelf.body.bounce.set(0.5);
-	    shelf.body.collideWorldBounds = true;
-	    shelf.body.immovable = true;
-	    shelves.add(shelf);
-	}
-    }
-
-    sprite1 = game.add.sprite(350,0,'tile');
-    var tween1 = game.add.tween(sprite1);
-    tween1.to({ x: [350], y: [350] }, 4823, Phaser.Easing.Bounce.Out,true);
-    tween1.start();
-
-    var style = { font: "32px Arial",
-		  fill: "#0055ee",
-		  wordWrap: true,
-		  align: "center",
-		  backgroundColor: "#ffffef" };
-    
-    text1 = game.add.text(350,0, randomWord(0), style);
-    text1.anchor.set(0.5,0.55);
-    
-    sprite2 = game.add.sprite(150,0,'tile');
-    tween2 = game.add.tween(sprite2);
-    tween2.to({ x: [150], y: [350] }, 3528, Phaser.Easing.Bounce.Out,true);
-    tween2.start();
-
-    text2 = game.add.text(150,0, randomWord(1), style);
-    text2.anchor.set(0.5,0.55);
+    add_stuff();
     
 }
 
@@ -240,4 +205,34 @@ function newWord(shelf) {
 	words.add(text);
     }
 }
+
+function add_sprite1(style) {
+    sprite1 = game.add.sprite(150,0,'tile');
+    tween1 = game.add.tween(sprite1);
+    tween1.to({ x: [150], y: [350] }, 3528, Phaser.Easing.Bounce.Out,true);
+    tween1.start();
     
+    text1 = game.add.text(150,0, randomWord(0), style);
+    text1.anchor.set(0.5,0.55);
+}
+
+function add_sprite2(style) {
+    sprite2 = game.add.sprite(350,0,'tile');
+    tween2 = game.add.tween(sprite2);
+    tween2.to({ x: [350], y: [350] }, 3528, Phaser.Easing.Bounce.Out,true);
+    tween2.start();
+    
+    text2 = game.add.text(150,0, randomWord(1), style);
+    text2.anchor.set(0.5,0.55);
+}    
+
+function add_stuff() {
+    var style = { font: "32px Arial",
+		  fill: "#0055ee",
+		  wordWrap: true,
+		  align: "center",
+		  backgroundColor: "#ffffef" };
+    add_sprite1(style);
+    add_sprite2(style);
+};
+
