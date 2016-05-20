@@ -61,12 +61,17 @@ function respond_to_user_input(event) {
 function remove_from_blocks(roots) {
     num_roots = roots.length;
     num_blocks = words.children.length;
+
+    // remove one block for each root in roots.
     for (i = 0; i < num_roots; i++) {
 	root = roots[i];
+        // find the first block whose text === root.
+
 	for (c = 0; c < num_blocks; c++) {
 	    block = words.children[c];
 	    if (block.alive == true) {
-		block_text = block._text; // TODO: is this best practices per Phaser docs to access "_" fields?
+		// TODO: check if this best practices per Phaser docs to access "_" fields?
+		block_text = block._text; 
 		if (block_text === root) {
 		    kill_block(block);
 		    break; // only kill one block that matches the text; otherwise game is too easy.
@@ -135,6 +140,7 @@ function preload() {
     game.stage.backgroundColor = "#ede";
     game.load.image('word','img/ball.png');
     game.load.image('shelf','img/brick.png');
+    game.load.image('tile','img/tile.png');
 }
 
 function create() {
@@ -157,10 +163,16 @@ function create() {
 	}
 	newWord(c);
     }
+
+    //    http://phaser.io/examples/v2/tweens/tween-array#gv
+    sprite = game.add.sprite(100,250,'tile');
+    tween = game.add.tween(sprite);
+    tween.to({ x: [300, 300, 100, 100], y: [250, 150, 150, 250] }, 3000, "Linear");
+    tween.start();
 }
 
 function wordHitShelf(word,shelf) {
-    foo = 32;
+    log(DEBUG,"a word:" + word + " hit a shelf: " + shelf);
 }
 
 function update() {
