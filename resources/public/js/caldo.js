@@ -185,6 +185,7 @@ function randomWord(shelf) {
 }
 
 function newWord(shelf) {
+    // create a new word, but only if there aren't already enough words alive already.
     // count the number of alive words: TODO: do this with a global variable.
     alive_words = 0;
     num_blocks = words.children.length;
