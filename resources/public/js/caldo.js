@@ -126,10 +126,10 @@ function caldo() {
 	    });
 
 	// TODO: loop over num_shelves
-	window.setInterval(function() {newWord(0);},
-			   newWordInterval[0]);
-	window.setInterval(function() {newWord(1);},
-			   newWordInterval[1]);
+//	window.setInterval(function() {newWord(0);},
+//			   newWordInterval[0]);
+//	window.setInterval(function() {newWord(1);},
+//			   newWordInterval[1]);
     });
 }
 
@@ -137,16 +137,22 @@ function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
-    game.stage.backgroundColor = "#ede";
+    game.stage.backgroundColor = "#a8e";
     game.load.image('word','img/ball.png');
     game.load.image('shelf','img/brick.png');
     game.load.image('tile','img/tile.png');
 }
 
+var sprite1;
+var text1;
+
+var sprite2;
+var text2;
+
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    textStyle = { font: '18px Arial', fill: '#0095DD' };
+    textStyle = { font: '18px Arial', fill: '#eeffDD' };
     scoreText = game.add.text(5,5,'Points: 0',textStyle);
     
     shelves = game.add.group();
@@ -163,11 +169,28 @@ function create() {
 	}
     }
 
-    //    http://phaser.io/examples/v2/tweens/tween-array#gv
-    sprite = game.add.sprite(100,250,'tile');
-    tween = game.add.tween(sprite);
-    tween.to({ x: [300, 300, 100, 100], y: [250, 150, 150, 250] }, 3000, "Linear");
-    tween.start();
+    sprite1 = game.add.sprite(350,0,'tile');
+    var tween1 = game.add.tween(sprite1);
+    tween1.to({ x: [350], y: [350] }, 4823, Phaser.Easing.Bounce.Out,true);
+    tween1.start();
+
+    var style = { font: "32px Arial",
+		  fill: "#0055ee",
+		  wordWrap: true,
+		  align: "center",
+		  backgroundColor: "#ffffef" };
+    
+    text1 = game.add.text(350,0, randomWord(0), style);
+    text1.anchor.set(0.5,0.55);
+    
+    sprite2 = game.add.sprite(150,0,'tile');
+    tween2 = game.add.tween(sprite2);
+    tween2.to({ x: [150], y: [350] }, 3528, Phaser.Easing.Bounce.Out,true);
+    tween2.start();
+
+    text2 = game.add.text(150,0, randomWord(1), style);
+    text2.anchor.set(0.5,0.55);
+    
 }
 
 function wordHitShelf(word,shelf) {
@@ -175,8 +198,11 @@ function wordHitShelf(word,shelf) {
 }
 
 function update() {
-    game.physics.arcade.collide(words,shelves,wordHitShelf);
-    game.physics.arcade.collide(words,words,wordHitShelf);
+    text1.x = Math.floor(sprite1.x + sprite1.width / 2);
+    text1.y = Math.floor(sprite1.y + sprite1.height / 2);
+
+    text2.x = Math.floor(sprite2.x + sprite2.width / 2);
+    text2.y = Math.floor(sprite2.y + sprite2.height / 2);
 }
 
 function randomWord(shelf) {
