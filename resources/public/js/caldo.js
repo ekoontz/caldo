@@ -161,7 +161,6 @@ function create() {
 	    shelf.body.immovable = true;
 	    shelves.add(shelf);
 	}
-	newWord(c);
     }
 
     //    http://phaser.io/examples/v2/tweens/tween-array#gv
