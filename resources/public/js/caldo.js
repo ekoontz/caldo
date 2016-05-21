@@ -32,6 +32,8 @@ var game;
 var scoreText;
 var score = 0;
 
+var wordbricks = [];
+
 // methods
 function respond_to_user_input(event) {
     key_pressed = event.which;
@@ -125,11 +127,14 @@ function caldo() {
 		update: update
 	    });
 
-	// TODO: loop over num_shelves
-//	window.setInterval(function() {newWord(0);},
-//			   newWordInterval[0]);
-//	window.setInterval(function() {newWord(1);},
-//			   newWordInterval[1]);
+	var total_bricks = 4;
+	var i = 0;
+	window.setInterval(function() {
+	    if (i < 4) {
+		add_brick((125 * i) + 25, i % 2);
+		i++;
+	    }
+	}, 1000);
     });
 }
 
@@ -143,31 +148,21 @@ function preload() {
     game.load.image('tile','img/tile.png');
 }
 
-var sprite1;
-var text1;
-
-var sprite2;
-var text2;
-
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    textStyle = { font: '18px Arial', fill: '#eeffDD' };
-    scoreText = game.add.text(5,5,'Points: 0',textStyle);
-    add_stuff();
-    
-}
+    scoreTextStyle = { font: '18px Arial', fill: '#eeffDD' };
+    scoreText = game.add.text(5,5,'Points: 0',scoreTextStyle);
 
-function wordHitShelf(word,shelf) {
-    log(TRACE,"a word:" + word + " hit a shelf: " + shelf);
 }
 
 function update() {
-    text1.x = Math.floor(sprite1.x + sprite1.width / 2);
-    text1.y = Math.floor(sprite1.y + sprite1.height / 2);
-
-    text2.x = Math.floor(sprite2.x + sprite2.width / 2);
-    text2.y = Math.floor(sprite2.y + sprite2.height / 2);
+    for (var i = 0; i < wordbricks.length; i++) {
+	var brick = wordbricks[i][0];
+	var text =  wordbricks[i][1];
+	text.x = Math.floor(brick.x + brick.width / 2);
+	text.y = Math.floor(brick.y + brick.height / 2);
+    }
 }
 
 function randomWord(shelf) {
@@ -175,64 +170,15 @@ function randomWord(shelf) {
     return shelf_words[shelf][random_integer];
 }
 
-function newWord(shelf) {
-    // create a new word, but only if there aren't already enough words alive already.
-    // count the number of alive words: TODO: do this with a global variable.
-    alive_words = 0;
-    num_blocks = words.children.length;
-    for (c = 0; c < num_blocks; c++) {
-	block = words.children[c];
-	if (block.alive == true) {
-	    alive_words++;
-	}
-    }
-
-    if (alive_words < num_words_at_a_time) {
-	style = { font: "32px Arial",
-		  fill: "#0055ee",
-		  wordWrap: true,
-		  align: "center",
-		  backgroundColor: "#ffffef" };
-	
-	text = game.add.text( (150*shelf) + 125, 0, randomWord(shelf), style);
-	text.anchor.set(0.5);
-	
-	game.physics.arcade.enable([text]);
-	text.body.velocity.setTo(0,0);
-	text.body.gravity.y = 500;
-	text.body.collideWorldBounds = true;
-	text.body.bounce.set(0.5 + (.1 * (Math.random())));
-	words.add(text);
-    }
-}
-
-function add_sprite1(style) {
-    sprite1 = game.add.sprite(150,0,'tile');
-    tween1 = game.add.tween(sprite1);
-    tween1.to({ x: [150], y: [350] }, 3528, Phaser.Easing.Bounce.Out,true);
-    tween1.start();
+function add_brick(x,wordclass) {
+    var style = { font: '18px Arial', fill: '#000' };
+    var sprite = game.add.sprite(x,0,'tile');
+    tween = game.add.tween(sprite);
+    tween.to({ x: [x], y: [350] }, 3528, Phaser.Easing.Bounce.Out,true);
+    tween.start();
     
-    text1 = game.add.text(150,0, randomWord(0), style);
-    text1.anchor.set(0.5,0.55);
+    var text = game.add.text(x,0, randomWord(wordclass), style);
+    text.anchor.set(0.5,0.55);
+    wordbricks.push([sprite,text]);
 }
-
-function add_sprite2(style) {
-    sprite2 = game.add.sprite(350,0,'tile');
-    tween2 = game.add.tween(sprite2);
-    tween2.to({ x: [350], y: [350] }, 3528, Phaser.Easing.Bounce.Out,true);
-    tween2.start();
-    
-    text2 = game.add.text(150,0, randomWord(1), style);
-    text2.anchor.set(0.5,0.55);
-}    
-
-function add_stuff() {
-    var style = { font: "32px Arial",
-		  fill: "#0055ee",
-		  wordWrap: true,
-		  align: "center",
-		  backgroundColor: "#ffffef" };
-    add_sprite1(style);
-    add_sprite2(style);
-};
 
