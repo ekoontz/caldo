@@ -175,7 +175,7 @@ function update() {
 		    text._text);
 		var tween = game.add.tween(brick);
 		tween.to({ x: [brick.x], y: [brick_bottom] },
-			 1000, function (k) {
+			 750, function (k) {
 			     return tweenMove(brick,text,k);
 			 },
 			 true);
