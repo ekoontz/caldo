@@ -164,26 +164,22 @@ function update() {
 	for (var i = 0; i < wordbricks.length; i++) {
 	    var brick = wordbricks[i].brick;
 	    var text =  wordbricks[i].text;
-	    if (brick.doTweenCheck === true) {
-		log(TRACE,"checking brick: " + text._text);
-		brick.doTweenCheck = false;
-		var brick_bottom = findBottom(brick,text._text,wordbricks);
-		log(TRACE,"brick_bottom for brick with y= " +
-		    brick.y + " = " + brick_bottom);
-		log(TRACE,"brick's doTweenCheck: " + brick.doTweenCheck);
-		if (brick.y < brick_bottom) {
-		    // we are too high and must fall down to brick_bottom now.
-		    oneOrMoreBricksChanged = true;
-		    log(DEBUG,"we should do a tween for brick with text:" +
-			text._text);
-		    var tween = game.add.tween(brick);
-		    tween.to({ x: [brick.x], y: [brick_bottom] },
-			     1000, function (k) {
-				 return tweenMove(brick,text,k);
-			     },
-			     true);
-		    tween.start();
-		}
+	    log(TRACE,"checking brick: " + text._text);
+	    var brick_bottom = findBottom(brick,text._text,wordbricks);
+	    log(TRACE,"brick_bottom for brick with y= " +
+		brick.y + " = " + brick_bottom);
+	    if (brick.y < brick_bottom) {
+		// we are too high and must fall down to brick_bottom now.
+		oneOrMoreBricksChanged = true;
+		log(DEBUG,"we should do a tween for brick with text:" +
+		    text._text);
+		var tween = game.add.tween(brick);
+		tween.to({ x: [brick.x], y: [brick_bottom] },
+			 1000, function (k) {
+			     return tweenMove(brick,text,k);
+			 },
+			 true);
+		tween.start();
 	    }
 	    updateText(brick,text);
 	}
@@ -202,7 +198,6 @@ function add_brick(x,wordclass,wordbricks) {
     text.anchor.set(0.5,0.55);
     wordbricks.push({"brick": sprite,
 		     "text": text});
-    sprite.doTweenCheck = true;
     checkBricks = true;
 
     sprite.inputEnabled = true;
@@ -217,10 +212,6 @@ function add_brick(x,wordclass,wordbricks) {
 function onMouseUp(sprite,wordbricks) {
     log(DEBUG,"reactivating brick tweens.");
     checkBricks = true;
-
-    for (var i = 0; i < wordbricks.length; i++) {
-	wordbricks[i].brick.doTweenCheck = true;
-    }
 }
 
 function updateText(brick,text) {
