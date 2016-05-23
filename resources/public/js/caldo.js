@@ -178,13 +178,14 @@ function update() {
 			text._text);
 		    var tween = game.add.tween(brick);
 		    tween.to({ x: [brick.x], y: [brick_bottom] },
-			     1000, tweenMove,
+			     1000, function (k) {
+				 return tweenMove(brick,text,k);
+			     },
 			     true);
 		    tween.start();
 		}
 	    }
-	    text.x = Math.floor(brick.x + brick.width / 2);
-	    text.y = Math.floor(brick.y + brick.height / 2);
+	    updateText(brick,text);
 	}
     }
 }
@@ -216,12 +217,18 @@ function add_brick(x,wordclass,wordbricks) {
 function onMouseUp(sprite,wordbricks) {
     log(DEBUG,"reactivating brick tweens.");
     checkBricks = true;
+
     for (var i = 0; i < wordbricks.length; i++) {
 	wordbricks[i].brick.doTweenCheck = true;
     }
 }
 
-function tweenMove(k) {
+function updateText(brick,text) {
+    text.x = Math.floor(brick.x + brick.width / 2);
+    text.y = Math.floor(brick.y + brick.height / 2);
+}
+
+function tweenMove(brick,text,k) {
     if (k == 1) {
 	checkBricks = true;
 	log(TRACE,"reactivating checks post-tween.");
@@ -229,6 +236,7 @@ function tweenMove(k) {
 	    wordbricks[i].brick.doTweenCheck = true;
 	}
     }
+    updateText(brick,text);
     return Phaser.Easing.Bounce.Out(k);
 }
 
