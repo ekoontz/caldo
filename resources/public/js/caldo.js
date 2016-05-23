@@ -49,14 +49,30 @@ function respond_to_user_input(event) {
 		    log(INFO,"server returned no roots for input: '"
 			+ $("#userinput").val());
 		} else {
-		    log(INFO,"response from server: found: " +
-			roots.length + " roots:" +
-			roots.join());
+		    if (roots.length === 0) {
+			log(INFO,"parsing error");
+			var animationName = "animated shake";
+			$("#userinput").addClass(animationName).one('animationend',
+								    function() {
+									$(this).removeClass(animationName);
+								    });
+		    } else {
+			var animationName = "animated flash flashy";
+			$("#userinput").addClass(animationName).one('animationend',
+								    function() {
+									$(this).removeClass(animationName);
+									$("#userinput").val("");
+								    });
+
+			log(INFO,"response from server: found: " +
+			    roots.length + " roots:" +
+			    roots.join());
+		    }
+//		    $("#userinput").val("");
 		}
 
 		remove_from_blocks(roots,wordbricks);
 
-		$("#userinput").val("");
 		$("#userinput").focus();
 	    });
     }

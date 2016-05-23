@@ -2,11 +2,6 @@ body {
     background: #eff;
 }
 
-#userinput {
-    width:100%;
-    float:left;
-}
-
 #header {
     width:100%;
     float:left;
@@ -15,6 +10,10 @@ body {
 #userinput {
     width:100%;
     float:left;
+}
+
+.flashy {
+    background: lightgreen;
 }
 
 #header h1 {

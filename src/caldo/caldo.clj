@@ -34,6 +34,9 @@
         :body (html [:html [:head [:title "benvenuto a caldo!"]
                             [:link {:rel "stylesheet"
                                     :type "text/css"
+                                    :href "/css/animate.min.css"}]
+                            [:link {:rel "stylesheet"
+                                    :type "text/css"
                                     :href "/css/caldo.css"}]
                             [:script {:type "text/javascript"
                                       :src "/js/jquery.min.js"}]
