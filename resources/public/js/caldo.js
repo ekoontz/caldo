@@ -131,16 +131,10 @@ function caldo() {
 	var i = 0;
 	window.setInterval(function() {
 	    if (i < 4) {
-		add_brick((125 * i) + 25, i % 2);
+		add_brick((125 * i) + 25, i % 2,wordbricks);
 		i++;
 	    }
 	}, 1000);
-
-
-	window.setInterval(function() {
-	    remove_brick(2);
-	}, 5000);
-
     });
 }
 
@@ -177,7 +171,7 @@ function randomWord(shelf) {
     return shelf_words[shelf][random_integer];
 }
 
-function add_brick(x,wordclass) {
+function add_brick(x,wordclass,wordbricks) {
     var style = { font: '18px Arial', fill: '#000' };
     var sprite = game.add.sprite(x,0,'tile');
     var text = game.add.text(x,0, randomWord(wordclass), style);
@@ -185,15 +179,36 @@ function add_brick(x,wordclass) {
     wordbricks.push({"brick": sprite,
 		     "text": text});
     sprite.tween_needed = true;
+
+    sprite.inputEnabled = true;
+    
+    // mouse support:
+    sprite.input.enableDrag();
+    sprite.events.onInputUp.add(function(sprite) {
+	onMouseUp(this,wordbricks);},
+				this);
+}
+
+function onMouseUp(sprite,wordbricks) {
+    log(DEBUG,"reactivating brick tweens.");
+    for (var i = 0; i < wordbricks.length; i++) {
+	wordbricks[i].brick.tween_needed = true;
+    }
 }
 
 function do_one_tween(brick,text) {
-    var brick_bottom = find_bottom_for(brick,wordbricks);
-    if ((brick.y < brick_bottom) && (brick.tween_needed == true)) {
+    if (brick.tween_needed === true) {
 	brick.tween_needed = false;
-	var tween = game.add.tween(brick);
-	tween.to({ x: [brick.x], y: [brick_bottom] }, 1000, Phaser.Easing.Bounce.Out,true);
-	tween.start();
+	var brick_bottom = find_bottom_for(brick,wordbricks);
+	log(DEBUG,"brick_bottom for brick with y= " + brick.y + " = " + brick_bottom);
+	log(DEBUG,"brick's tween_needed: " + brick.tween_needed);
+	if (brick.y < brick_bottom) {
+
+	    log(DEBUG,"we should do a tween for brick with y=" + brick.y);
+	    var tween = game.add.tween(brick);
+	    tween.to({ x: [brick.x], y: [brick_bottom] }, 1000, Phaser.Easing.Bounce.Out,true);
+	    tween.start();
+	}
     }
 }
 
