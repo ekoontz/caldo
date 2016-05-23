@@ -8,14 +8,13 @@
 //
 // must be loaded for caldo.js to work.
 
-
 // global constants
 var num_words_at_a_time = 10;
 var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = DEBUG;
 var hang_shelves = false;
-var bricksize = { x:100, y: 51 };
+var bricksize = { x:130, y: 51 };
 // TODO: load from server.
 var shelf_words = [
     ["io","tu","lui","lei","noi","voi","loro"],
