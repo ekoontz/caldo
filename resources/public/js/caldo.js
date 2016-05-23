@@ -12,7 +12,7 @@
 var num_words_at_a_time = 10;
 var num_shelves = 2;
 var newWordInterval = [3000,4000];
-var logging_level = DEBUG;
+var logging_level = INFO;
 var hang_shelves = false;
 var bricksize = { x:130, y: 51 };
 // TODO: load from server.
@@ -32,6 +32,7 @@ var scoreText;
 var score = 0;
 
 var wordbricks = [];
+var checkBricks = true;
 
 // methods
 function respond_to_user_input(event) {
@@ -153,48 +154,38 @@ function preload() {
 
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
-
     scoreTextStyle = { font: '18px Arial', fill: '#eeffDD' };
     scoreText = game.add.text(5,5,'Points: 0',scoreTextStyle);
-
-}
-
-function tweenMove(k) {
-    blah = Phaser.Easing.Bounce.Out(k);
-    if (k == 1) {
-	log(TRACE,"reactivating checks post-tween.");
-	for (var i = 0; i < wordbricks.length; i++) {
-	    wordbricks[i].brick.doTweenCheck = true;
-	}
-    }
-    return blah;
 }
 
 function update() {
-    for (var i = 0; i < wordbricks.length; i++) {
-	var brick = wordbricks[i].brick;
-	var text =  wordbricks[i].text;
-	if (brick.doTweenCheck === true) {
-	    log(TRACE,"checking brick: " + text._text);
-	    brick.doTweenCheck = false;
-	    var brick_bottom = findBottom(brick,text._text,wordbricks);
-	    log(TRACE,"brick_bottom for brick with y= " +
-		brick.y + " = " + brick_bottom);
-	    log(TRACE,"brick's doTweenCheck: " + brick.doTweenCheck);
-	    if (brick.y < brick_bottom) {
-		// we are too high and must fall down to brick_bottom now.
-		oneOrMoreBricksChanged = true;
-		log(DEBUG,"we should do a tween for brick with text:" +
-		    text._text);
-		var tween = game.add.tween(brick);
-		tween.to({ x: [brick.x], y: [brick_bottom] },
-			 1000, tweenMove,
-			 true);
-		tween.start();
+    if (checkBricks === true) {
+	checkBricks = false;
+	for (var i = 0; i < wordbricks.length; i++) {
+	    var brick = wordbricks[i].brick;
+	    var text =  wordbricks[i].text;
+	    if (brick.doTweenCheck === true) {
+		log(TRACE,"checking brick: " + text._text);
+		brick.doTweenCheck = false;
+		var brick_bottom = findBottom(brick,text._text,wordbricks);
+		log(TRACE,"brick_bottom for brick with y= " +
+		    brick.y + " = " + brick_bottom);
+		log(TRACE,"brick's doTweenCheck: " + brick.doTweenCheck);
+		if (brick.y < brick_bottom) {
+		    // we are too high and must fall down to brick_bottom now.
+		    oneOrMoreBricksChanged = true;
+		    log(DEBUG,"we should do a tween for brick with text:" +
+			text._text);
+		    var tween = game.add.tween(brick);
+		    tween.to({ x: [brick.x], y: [brick_bottom] },
+			     1000, tweenMove,
+			     true);
+		    tween.start();
+		}
 	    }
+	    text.x = Math.floor(brick.x + brick.width / 2);
+	    text.y = Math.floor(brick.y + brick.height / 2);
 	}
-	text.x = Math.floor(brick.x + brick.width / 2);
-	text.y = Math.floor(brick.y + brick.height / 2);
     }
 }
 
@@ -211,6 +202,7 @@ function add_brick(x,wordclass,wordbricks) {
     wordbricks.push({"brick": sprite,
 		     "text": text});
     sprite.doTweenCheck = true;
+    checkBricks = true;
 
     sprite.inputEnabled = true;
     
@@ -223,10 +215,21 @@ function add_brick(x,wordclass,wordbricks) {
 
 function onMouseUp(sprite,wordbricks) {
     log(DEBUG,"reactivating brick tweens.");
-//    sprite.doTweenCheck = true;
+    checkBricks = true;
     for (var i = 0; i < wordbricks.length; i++) {
 	wordbricks[i].brick.doTweenCheck = true;
     }
+}
+
+function tweenMove(k) {
+    if (k == 1) {
+	checkBricks = true;
+	log(TRACE,"reactivating checks post-tween.");
+	for (var i = 0; i < wordbricks.length; i++) {
+	    wordbricks[i].brick.doTweenCheck = true;
+	}
+    }
+    return Phaser.Easing.Bounce.Out(k);
 }
 
 function findBottom(brick,text,wordbricks) {
