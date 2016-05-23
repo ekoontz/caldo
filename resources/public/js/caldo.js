@@ -19,8 +19,8 @@ var hang_shelves = false;
 var BrickSize = { Y: 49 };
 var BrickScale = { X: 0.28, Y: 0.8 };
 var BrickAtom = 45;
-var BottomOfScreen = 335;
-var RightOfScreen = 450;
+var BottomOfScreen = 345;
+var RightOfScreen = 475;
 var Mortar = 5;
 var HighestBrick = {Y: 50};
 // TODO: load from server.
@@ -62,7 +62,7 @@ function respond_to_user_input(event) {
 			roots.length + " roots.");
 		}
 
-		remove_from_blocks(roots);
+		remove_from_blocks(roots,wordbricks);
 
 		$("#userinput").val("");
 		$("#userinput").focus();
@@ -70,9 +70,9 @@ function respond_to_user_input(event) {
     }
 }
 
-function remove_from_blocks(roots) {
+function remove_from_blocks(roots,wordbricks) {
     num_roots = roots.length;
-    num_blocks = words.children.length;
+    num_blocks = wordbricks.length;
 
     // remove one block for each root in roots.
     for (i = 0; i < num_roots; i++) {
@@ -80,13 +80,13 @@ function remove_from_blocks(roots) {
         // find the first block whose text === root.
 
 	for (c = 0; c < num_blocks; c++) {
-	    block = words.children[c];
-	    if (block.alive == true) {
+	    brick = wordbricks[c].brick;
+	    if (brick.alive == true) {
 		// TODO: check if this best practices
 		// per Phaser docs to access "_" fields?
-		block_text = block._text; 
-		if (block_text === root) {
-		    killBrick(block);
+		var text_object = wordbricks[c].text;
+		if (text_object._text === root) {
+		    killBrick(brick,text_object);
 		    break; // only kill one block that matches
 		    // the text; otherwise game is too easy.
 		}
@@ -95,7 +95,13 @@ function remove_from_blocks(roots) {
     }
 }
 
+function updateScore(increment) {
+    score += increment;
+    scoreText.setText('Points: ' + score);
+}
+
 function killBrick(brick,text) {
+    updateScore(10);
     var killTween = game.add.tween(brick.scale);
     killTween.to({x:0.25,y:0.25},250,Phaser.Easing.Linear.Out,true,10);
     killTween.onComplete.addOnce(function() {
@@ -104,9 +110,6 @@ function killBrick(brick,text) {
 	text.kill();
     }, this);
     killTween.start();
-    score += 10;
-    scoreText.setText('Points: ' + score);
-
 }
 
 function caldo() {
@@ -148,7 +151,7 @@ function caldo() {
 		var position = Math.floor(Math.random() *
 					  ( RightOfScreen / BrickAtom));
 		addBrick((BrickAtom * position),
-			 i % 3,wordbricks);
+			 i % 2,wordbricks);
 		i++;
 	    }
 	}, 200);
@@ -197,7 +200,9 @@ function update() {
 		brick.y + " = " + brick_bottom);
 	    if (brick.y < brick_bottom) {
 		// we are too high and must fall down to brick_bottom now.
-		oneOrMoreBricksChanged = true;
+		if (brick.initialDescent === false) {
+		    updateScore(1);
+		}
 		log(DEBUG,"we should do a tween for brick with text:" +
 		    text._text);
 		var tween = game.add.tween(brick);
@@ -207,6 +212,8 @@ function update() {
 			 },
 			 true);
 		tween.start();
+	    } else {
+		brick.initialDescent = false;
 	    }
 	    updateText(brick,text);
 	}
@@ -231,7 +238,7 @@ function addBrick(x,wordclass,wordbricks) {
 		     "text": text});
     checkBricks = true;
 
-    // mouse support:
+    // mouse support: for debugging only.
     sprite.inputEnabled = true;
     sprite.events.onInputDown.add(function() {
 	killBrick(sprite,text);
