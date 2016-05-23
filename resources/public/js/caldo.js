@@ -9,17 +9,17 @@
 // must be loaded for caldo.js to work.
 
 // global constants
-var num_words_at_a_time = 10;
+var num_words_at_a_time = 20;
 var total_bricks = num_words_at_a_time;
 var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = INFO;
 var hang_shelves = false;
 var BrickSize = { Y: 51 };
-var BrickScale = { X: 0.25, Y: 0.8 };
+var BrickScale = { X: 0.28, Y: 0.8 };
 var BrickAtom = 45;
 var BottomOfScreen = 335;
-var RightOfScreen = 150;
+var RightOfScreen = 450;
 var Mortar = 5;
 // TODO: load from server.
 var shelf_words = [
@@ -95,7 +95,7 @@ function remove_from_blocks(roots) {
 
 function killBrick(brick,text) {
     var killTween = game.add.tween(brick.scale);
-    killTween.to({x:0.25,y:0.25},150,Phaser.Easing.Linear.Out,true,10);
+    killTween.to({x:0.25,y:0.25},50,Phaser.Easing.Linear.Out,true,10);
     killTween.onComplete.addOnce(function() {
 	brick.kill();
 	checkBricks = true;
@@ -144,9 +144,7 @@ function caldo() {
 	    if (i < total_bricks) {
 		var position = Math.floor(Math.random() *
 					  ( RightOfScreen / BrickAtom));
-		var lengthInAtoms = Math.floor(Math.random() * 2) + 1;
-		addBrick(Mortar + (BrickAtom * position),
-			 lengthInAtoms,
+		addBrick((BrickAtom * position),
 			 i % 3,wordbricks);
 		i++;
 	    }
@@ -203,11 +201,14 @@ function randomWord(shelf) {
     return shelf_words[shelf][random_integer];
 }
 
-function addBrick(x,length,wordclass,wordbricks) {
+function addBrick(x,wordclass,wordbricks) {
     var style = { font: '18px Arial', fill: '#000' };
-    var sprite = game.add.sprite(x,0,'tile');
-    sprite.scale.setTo(BrickScale.X * length,BrickScale.Y);
-    var text = game.add.text(x,0, randomWord(wordclass), style);
+    var sprite = game.add.sprite(x + Mortar,0,'tile');
+    var word = randomWord(wordclass);
+    var lengthInAtoms = Math.floor(word.length / 4.0) + 1;
+    sprite.scale.setTo((BrickScale.X * lengthInAtoms),
+		       BrickScale.Y);
+    var text = game.add.text(x,0,word,style);
     text.anchor.set(0.5,0.55);
     wordbricks.push({"brick": sprite,
 		     "text": text});
