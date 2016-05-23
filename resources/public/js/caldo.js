@@ -133,14 +133,14 @@ function caldo() {
 		update: update
 	    });
 
-	var total_bricks = 4;
+	var total_bricks = 6;
 	var i = 0;
 	window.setInterval(function() {
-	    if (i < 4) {
-		addBrick((125 * i) + 25, i % 2,wordbricks);
+	    if (i < total_bricks) {
+		addBrick((85 * i) + 25, i % 2,wordbricks);
 		i++;
 	    }
-	}, 1000);
+	}, 100);
     });
 }
 
