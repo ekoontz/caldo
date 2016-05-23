@@ -12,7 +12,7 @@
 var num_words_at_a_time = 10;
 var num_shelves = 2;
 var newWordInterval = [3000,4000];
-var logging_level = DEBUG;
+var logging_level = INFO;
 var hang_shelves = false;
 var bricksize = { x:130, y: 51 };
 // TODO: load from server.
@@ -133,11 +133,11 @@ function caldo() {
 		update: update
 	    });
 
-	var total_bricks = 6;
+	var total_bricks = 10;
 	var i = 0;
 	window.setInterval(function() {
 	    if (i < total_bricks) {
-		addBrick((85 * i) + 25, i % 2,wordbricks);
+		addBrick((45 * Math.floor(Math.random() * total_bricks)) + 25, i % 2,wordbricks);
 		i++;
 	    }
 	}, 100);
