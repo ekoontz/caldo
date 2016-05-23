@@ -46,9 +46,11 @@ function respond_to_user_input(event) {
             url: "/say"}).done(function(content) {
 		roots = content.roots;
 		if (roots == undefined) {
-		    log(INFO,"server returned no roots for input: '" + $("#userinput").val());
+		    log(INFO,"server returned no roots for input: '"
+			+ $("#userinput").val());
 		} else {
-		    log(INFO,"response from server: found: " + roots.length + " roots.");
+		    log(INFO,"response from server: found: " +
+			roots.length + " roots.");
 		}
 
 		remove_from_blocks(roots);
@@ -71,11 +73,13 @@ function remove_from_blocks(roots) {
 	for (c = 0; c < num_blocks; c++) {
 	    block = words.children[c];
 	    if (block.alive == true) {
-		// TODO: check if this best practices per Phaser docs to access "_" fields?
+		// TODO: check if this best practices
+		// per Phaser docs to access "_" fields?
 		block_text = block._text; 
 		if (block_text === root) {
 		    kill_block(block);
-		    break; // only kill one block that matches the text; otherwise game is too easy.
+		    break; // only kill one block that matches
+		    // the text; otherwise game is too easy.
 		}
 	    }
 	}
@@ -198,23 +202,26 @@ function onMouseUp(sprite,wordbricks) {
 function do_one_tween(brick,text) {
     if (brick.tween_needed === true) {
 	brick.tween_needed = false;
-	var brick_bottom = find_bottom_for(brick,wordbricks);
-	log(DEBUG,"brick_bottom for brick with y= " + brick.y + " = " + brick_bottom);
-	log(DEBUG,"brick's tween_needed: " + brick.tween_needed);
+	var brick_bottom = findBottom(brick,text._text,wordbricks);
+	log(TRACE,"brick_bottom for brick with y= " +
+	    brick.y + " = " + brick_bottom);
+	log(TRACE,"brick's tween_needed: " + brick.tween_needed);
 	if (brick.y < brick_bottom) {
-
-	    log(DEBUG,"we should do a tween for brick with y=" + brick.y);
+	    log(TRACE,"we should do a tween for brick with y=" + brick.y);
 	    var tween = game.add.tween(brick);
-	    tween.to({ x: [brick.x], y: [brick_bottom] }, 1000, Phaser.Easing.Bounce.Out,true);
+	    tween.to({ x: [brick.x], y: [brick_bottom] },
+		     1000, Phaser.Easing.Bounce.Out,true);
 	    tween.start();
 	}
     }
 }
 
-function find_bottom_for(brick,wordbricks) {
+function findBottom(brick,text,wordbricks) {
     var retval = 330;
-    var overlapping_bricks = find_overlapping_bricks(brick,wordbricks);
+    var overlapping_bricks = bricksUnderMe(brick,text,wordbricks);
     if (overlapping_bricks.length > 0) {
+	log(DEBUG,"brick: " + text + " has " +
+	    overlapping_bricks.length + " bricks under it.");
 	for (var i = 0; i < overlapping_bricks.length; i++) {
 	    var this_brick = overlapping_bricks[i];
 	    if (this_brick.y < retval) {
@@ -225,7 +232,7 @@ function find_bottom_for(brick,wordbricks) {
     return retval;
 }
 
-function find_overlapping_bricks(brick,wordbricks) {
+function bricksUnderMe(brick,text,wordbricks) {
     /* find all bricks which overlap with this one */
     var l1 = brick.x;
     var r1 = l1 + bricksize.x;
@@ -235,13 +242,22 @@ function find_overlapping_bricks(brick,wordbricks) {
 	if (brick === this_brick) {
 	    continue;
 	}
-	var l2 = this_brick.x;
-	var r2 = r2 + bricksize.x;
 
-	if ((r2 => l1) &&
-	    (l2 <= r1)) {
+	var l2 = this_brick.x;
+	var r2 = l2 + bricksize.x;
+	
+	if ((r2 >= l1) &&
+	    (l2 <= r1) &&
+	    (brick.y < this_brick.y)) {
+	    log(DEBUG,"brick: " + text+
+		"(l1=" + l1 + ",r1=" + r1 + ")" +
+		" has a brick below it:" +
+		wordbricks[i].text._text + 
+		"(l2=" + l2 + ",r2=" + r2 + ")");
+
 	    retval.push(this_brick);
 	}
+	
     }
     return retval;
 }
