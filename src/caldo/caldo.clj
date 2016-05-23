@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [get-in])
   (:require
    [dag_unify.core :refer [get-in unify]]
-   [babel.italiano :refer [generate parse]]
+   [babel.italiano :as italiano :refer [generate lexicon parse]]
    [caldo.auth.google :as google-auth]
    [cemerick.friend :as friend]
    [cemerick.friend [workflows :as workflows]]
@@ -60,7 +60,19 @@
                     roots (get-roots parsed)
                     debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
                 (log/info (str "roots: " (string/join ";" roots)))
-                (write-str {:roots roots}))}))
+                (write-str {:roots roots}))})
+
+
+  (GET "/randomroot" request
+       (let [wordclass (:class (:params request))
+             word (if (= 0 (Integer. wordclass))
+                    (first (shuffle italiano/infinitives))
+                    (first (shuffle italiano/nominative-pronouns)))]
+         (log/debug (str "GET /randomroot: class=" wordclass))
+         {:status 200
+          :headers {"Content-type" "application/json;charset=utf-8"}
+          :body (write-str {:root word})})))
+        
 
 (def app
   (handler/site 
