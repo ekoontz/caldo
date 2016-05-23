@@ -163,7 +163,21 @@ function update() {
     for (var i = 0; i < wordbricks.length; i++) {
 	var brick = wordbricks[i].brick;
 	var text =  wordbricks[i].text;
-	do_one_tween(brick,text);
+
+	if (brick.doTweenCheck === true) {
+	    brick.doTweenCheck = false;
+	    var brick_bottom = findBottom(brick,text._text,wordbricks);
+	    log(TRACE,"brick_bottom for brick with y= " +
+		brick.y + " = " + brick_bottom);
+	    log(TRACE,"brick's doTweenCheck: " + brick.doTweenCheck);
+	    if (brick.y < brick_bottom) {
+		log(TRACE,"we should do a tween for brick with y=" + brick.y);
+		var tween = game.add.tween(brick);
+		tween.to({ x: [brick.x], y: [brick_bottom] },
+			 1000, Phaser.Easing.Bounce.Out,true);
+		tween.start();
+	    }
+	}
 	text.x = Math.floor(brick.x + brick.width / 2);
 	text.y = Math.floor(brick.y + brick.height / 2);
     }
@@ -181,7 +195,7 @@ function add_brick(x,wordclass,wordbricks) {
     text.anchor.set(0.5,0.55);
     wordbricks.push({"brick": sprite,
 		     "text": text});
-    sprite.tween_needed = true;
+    sprite.doTweenCheck = true;
 
     sprite.inputEnabled = true;
     
@@ -195,36 +209,19 @@ function add_brick(x,wordclass,wordbricks) {
 function onMouseUp(sprite,wordbricks) {
     log(DEBUG,"reactivating brick tweens.");
     for (var i = 0; i < wordbricks.length; i++) {
-	wordbricks[i].brick.tween_needed = true;
-    }
-}
-
-function do_one_tween(brick,text) {
-    if (brick.tween_needed === true) {
-	brick.tween_needed = false;
-	var brick_bottom = findBottom(brick,text._text,wordbricks);
-	log(TRACE,"brick_bottom for brick with y= " +
-	    brick.y + " = " + brick_bottom);
-	log(TRACE,"brick's tween_needed: " + brick.tween_needed);
-	if (brick.y < brick_bottom) {
-	    log(TRACE,"we should do a tween for brick with y=" + brick.y);
-	    var tween = game.add.tween(brick);
-	    tween.to({ x: [brick.x], y: [brick_bottom] },
-		     1000, Phaser.Easing.Bounce.Out,true);
-	    tween.start();
-	}
+	wordbricks[i].brick.doTweenCheck = true;
     }
 }
 
 function findBottom(brick,text,wordbricks) {
     var retval = 330;
-    var overlapping_bricks = bricksUnderMe(brick,text,wordbricks);
-    if (overlapping_bricks.length > 0) {
+    var bricksUnder = bricksUnderMe(brick,text,wordbricks);
+    if (bricksUnder.length > 0) {
 	log(DEBUG,"brick: " + text + " has " +
-	    overlapping_bricks.length + " bricks under it.");
-	for (var i = 0; i < overlapping_bricks.length; i++) {
-	    var this_brick = overlapping_bricks[i];
-	    if (this_brick.y < retval) {
+	    bricksUnder.length + " bricks under it.");
+	for (var i = 0; i < bricksUnder.length; i++) {
+	    var this_brick = bricksUnder[i];
+	    if (this_brick.y <= retval) {
 		retval = this_brick.y - bricksize.y;
 	    }
 	}
