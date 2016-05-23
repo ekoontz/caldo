@@ -15,7 +15,7 @@ var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = DEBUG;
 var hang_shelves = false;
-var bricksize = { y: 54 };
+var bricksize = { x:100, y: 51 };
 // TODO: load from server.
 var shelf_words = [
     ["io","tu","lui","lei","noi","voi","loro"],
@@ -135,6 +135,12 @@ function caldo() {
 		i++;
 	    }
 	}, 1000);
+
+
+	window.setInterval(function() {
+	    remove_brick(2);
+	}, 5000);
+
     });
 }
 
@@ -193,24 +199,35 @@ function do_one_tween(brick,text) {
 
 function find_bottom_for(brick,wordbricks) {
     var retval = 330;
-    for (var i = 0; i < wordbricks.length; i++) {
-	var this_brick = wordbricks[i].brick;
-	if (brick === this_brick) {
-	    return retval;
+    var overlapping_bricks = find_overlapping_bricks(brick,wordbricks);
+    if (overlapping_bricks.length > 0) {
+	for (var i = 0; i < overlapping_bricks.length; i++) {
+	    var this_brick = overlapping_bricks[i];
+	    if (this_brick.y < retval) {
+		retval = this_brick.y - bricksize.y;
+	    }
 	}
-	retval = retval - bricksize.y;
     }
+    return retval;
 }
 
 function find_overlapping_bricks(brick,wordbricks) {
     /* find all bricks which overlap with this one */
+    var l1 = brick.x;
+    var r1 = l1 + bricksize.x;
+    var retval = [];
     for (var i = 0; i < wordbricks.length; i++) {
 	var this_brick = wordbricks[i].brick;
 	if (brick === this_brick) {
 	    continue;
 	}
-	if (brick) {}
-    }
+	var l2 = this_brick.x;
+	var r2 = r2 + bricksize.x;
 
-    
+	if ((r2 => l1) &&
+	    (l2 <= r1)) {
+	    retval.push(this_brick);
+	}
+    }
+    return retval;
 }
