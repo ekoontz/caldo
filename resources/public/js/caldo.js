@@ -159,7 +159,7 @@ function create() {
 
 }
 
-function foo(k) {
+function tweenMove(k) {
     blah = Phaser.Easing.Bounce.Out(k);
     if (k == 1) {
 	log(TRACE,"reactivating checks post-tween.");
@@ -188,7 +188,7 @@ function update() {
 		    text._text);
 		var tween = game.add.tween(brick);
 		tween.to({ x: [brick.x], y: [brick_bottom] },
-			 1000, foo,
+			 1000, tweenMove,
 			 true);
 		tween.start();
 	    }
@@ -270,38 +270,6 @@ function bricksUnderMe(brick,text,wordbricks) {
 		wordbricks[i].text._text + 
 		"(l2=" + l2 + ",r2=" + r2 + ")");
 
-	    retval.push(other_brick);
-	}
-	
-    }
-    return retval;
-}
-
-function bricksOverMe(brick,text,wordbricks) {
-    /* find all bricks directly above us */
-    var l1 = brick.x;
-    var r1 = l1 + bricksize.x;
-    var retval = [];
-    for (var i = 0; i < wordbricks.length; i++) {
-	var other_brick = wordbricks[i].brick;
-	if (brick === other_brick) {
-	    continue;
-	}
-
-	var l2 = other_brick.x;
-	var r2 = l2 + bricksize.x;
-	//       [ l2 <- --- -> r2 ]
-	// [ l1 <- --- -> r1]
-
-	
-	if ((r2 >= l1) &&
-	    (l2 <= r1) &&
-	    (brick.y > other_brick.y)) {
-	    log(DEBUG,"brick: " + text._text +
-		"(l1=" + l1 + ",r1=" + r1 + ")" +
-		" has a brick over it:" +
-		wordbricks[i].text._text + 
-		"(l2=" + l2 + ",r2=" + r2 + ")");
 	    retval.push(other_brick);
 	}
 	
