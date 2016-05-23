@@ -12,28 +12,19 @@
 var GameSize = {X:600,Y:400};
 var num_words_at_a_time = 20;
 var total_bricks = num_words_at_a_time;
-var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = INFO;
-var hang_shelves = false;
 var BrickSize = { Y: 49 };
 var BrickScale = { X: 0.28, Y: 0.8 };
 var BrickAtom = 45;
 var BottomOfScreen = 345;
 var RightOfScreen = 475;
 var Mortar = 5;
-var HighestBrick = {Y: 50};
-// TODO: load from server.
-var shelf_words = [
-    ["io","tu","lui","lei","noi","voi","loro"],
-    ["avere","fare","lavorare","leggere","mangiare",
-     "studiare","suonare","tornare"],
-    ["si","lo","la"]];
+var HighestBrick = {Y: 75};
 
 // global variables
 var words;
 var word;
-var shelves;
 var text;
 var game;
 var scoreText;
@@ -59,7 +50,8 @@ function respond_to_user_input(event) {
 			+ $("#userinput").val());
 		} else {
 		    log(INFO,"response from server: found: " +
-			roots.length + " roots.");
+			roots.length + " roots:" +
+			roots.join());
 		}
 
 		remove_from_blocks(roots,wordbricks);
@@ -178,7 +170,6 @@ function preload() {
     game.scale.pageAlignVertically = true;
     game.stage.backgroundColor = "#a8e";
     game.load.image('word','img/ball.png');
-    game.load.image('shelf','img/brick.png');
     game.load.image('tile','img/tile.png');
 }
 
@@ -221,8 +212,17 @@ function update() {
 }
 
 function randomWord(shelf) {
-    var random_integer = Math.floor(Math.random() * shelf_words[shelf].length);
-    return shelf_words[shelf][random_integer];
+    var root;
+    $.ajax({
+	async: false, // wait for a response before returning.
+	cache: false,
+	type: "GET",
+	data: {class: shelf},
+	dataType: "json",
+	url: "/randomroot"}).done(function(content) {
+	    root = content.root;
+	});
+    return root;
 }
 
 function addBrick(x,wordclass,wordbricks) {
