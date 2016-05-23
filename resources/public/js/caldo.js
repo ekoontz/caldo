@@ -9,17 +9,17 @@
 // must be loaded for caldo.js to work.
 
 // global constants
-var num_words_at_a_time = 15;
+var num_words_at_a_time = 10;
 var total_bricks = num_words_at_a_time;
 var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = INFO;
 var hang_shelves = false;
-var bricksize = { x:130, y: 51 };
-var BrickScale = { X: 0.35, Y: 0.8 };
+var BrickSize = { Y: 51 };
+var BrickScale = { X: 0.25, Y: 0.8 };
 var BrickAtom = 45;
 var BottomOfScreen = 335;
-var RightOfScreen = 500;
+var RightOfScreen = 150;
 var Mortar = 5;
 // TODO: load from server.
 var shelf_words = [
@@ -150,7 +150,7 @@ function caldo() {
 			 i % 3,wordbricks);
 		i++;
 	    }
-	}, 100);
+	}, 200);
     });
 }
 
@@ -253,7 +253,7 @@ function findBottom(brick,text,wordbricks) {
 	for (var i = 0; i < bricksUnder.length; i++) {
 	    var this_brick = bricksUnder[i];
 	    if (this_brick.y <= retval) {
-		retval = this_brick.y - bricksize.y;
+		retval = this_brick.y - BrickSize.Y;
 	    }
 	}
     }
@@ -262,9 +262,10 @@ function findBottom(brick,text,wordbricks) {
 
 function bricksUnderMe(brick,text,wordbricks) {
     /* find all bricks directly under us */
-    var l1 = brick.x;
-    var r1 = l1 + bricksize.x;
     var retval = [];
+    var brickBounds = brick.getBounds();
+    var l1 = brickBounds.x;
+    var r1 = l1 + brickBounds.width;
     for (var i = 0; i < wordbricks.length; i++) {
 	var other_brick = wordbricks[i].brick;
 	if ((brick === other_brick) ||
@@ -272,8 +273,9 @@ function bricksUnderMe(brick,text,wordbricks) {
 	    continue;
 	}
 
-	var l2 = other_brick.x;
-	var r2 = l2 + bricksize.x;
+	var otherBrickBounds = other_brick.getBounds();
+	var l2 = otherBrickBounds.x;
+	var r2 = l2 + otherBrickBounds.width;
 	// [ l1 <- --- -> r1]
 	//       [ l2 <- --- -> r2 ]
 	
