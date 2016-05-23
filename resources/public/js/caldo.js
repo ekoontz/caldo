@@ -12,7 +12,7 @@
 var num_words_at_a_time = 10;
 var num_shelves = 2;
 var newWordInterval = [3000,4000];
-var logging_level = INFO;
+var logging_level = DEBUG;
 var hang_shelves = false;
 var bricksize = { x:130, y: 51 };
 // TODO: load from server.
@@ -78,7 +78,7 @@ function remove_from_blocks(roots) {
 		// per Phaser docs to access "_" fields?
 		block_text = block._text; 
 		if (block_text === root) {
-		    kill_block(block);
+		    killBrick(block);
 		    break; // only kill one block that matches
 		    // the text; otherwise game is too easy.
 		}
@@ -87,11 +87,13 @@ function remove_from_blocks(roots) {
     }
 }
 
-function kill_block(brick) {
+function killBrick(brick,text) {
     var killTween = game.add.tween(brick.scale);
     killTween.to({x:0.25,y:0.25},150,Phaser.Easing.Linear.Out,true,10);
     killTween.onComplete.addOnce(function() {
 	brick.kill();
+	checkBricks = true;
+	text.kill();
     }, this);
     killTween.start();
     score += 10;
@@ -201,12 +203,11 @@ function addBrick(x,wordclass,wordbricks) {
     checkBricks = true;
 
     sprite.inputEnabled = true;
-    
+
     // mouse support:
-    sprite.input.enableDrag();
-    sprite.events.onInputUp.add(function(sprite) {
-	onMouseUp(this,wordbricks);},
-				this);
+    sprite.events.onInputDown.add(function() {
+	killBrick(sprite,text);
+    },this);
 }
 
 function onMouseUp(sprite,wordbricks) {
@@ -254,7 +255,8 @@ function bricksUnderMe(brick,text,wordbricks) {
     var retval = [];
     for (var i = 0; i < wordbricks.length; i++) {
 	var other_brick = wordbricks[i].brick;
-	if (brick === other_brick) {
+	if ((brick === other_brick) ||
+	    (other_brick.alive === false)) {
 	    continue;
 	}
 
