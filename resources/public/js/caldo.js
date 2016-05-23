@@ -2,25 +2,27 @@
 // Note that all of:
 //
 // - jquery{.min}.js
-// - mustachephaser{.min}.js
+// - mustache{.min}.js
 // - phaser{.min}.js 
 // - log4.js
 //
 // must be loaded for caldo.js to work.
 
 // global constants
+var GameSize = {X:600,Y:400};
 var num_words_at_a_time = 20;
 var total_bricks = num_words_at_a_time;
 var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = INFO;
 var hang_shelves = false;
-var BrickSize = { Y: 51 };
+var BrickSize = { Y: 49 };
 var BrickScale = { X: 0.28, Y: 0.8 };
 var BrickAtom = 45;
 var BottomOfScreen = 335;
 var RightOfScreen = 450;
 var Mortar = 5;
+var HighestBrick = {Y: 50};
 // TODO: load from server.
 var shelf_words = [
     ["io","tu","lui","lei","noi","voi","loro"],
@@ -95,7 +97,7 @@ function remove_from_blocks(roots) {
 
 function killBrick(brick,text) {
     var killTween = game.add.tween(brick.scale);
-    killTween.to({x:0.25,y:0.25},50,Phaser.Easing.Linear.Out,true,10);
+    killTween.to({x:0.25,y:0.25},250,Phaser.Easing.Linear.Out,true,10);
     killTween.onComplete.addOnce(function() {
 	brick.kill();
 	checkBricks = true;
@@ -131,7 +133,7 @@ function caldo() {
     
 	// 4. start game
 	game = new Phaser.Game(
-	    600,400,
+	    GameSize.X,GameSize.Y,
 	    Phaser.AUTO,
 	    "gamecontainer", {
 		preload: preload,
@@ -141,7 +143,8 @@ function caldo() {
 
 	var i = 0;
 	window.setInterval(function() {
-	    if (i < total_bricks) {
+	    var highestBrick = findHighestBrick(wordbricks);
+	    if (highestBrick > HighestBrick.Y) {
 		var position = Math.floor(Math.random() *
 					  ( RightOfScreen / BrickAtom));
 		addBrick((BrickAtom * position),
@@ -150,6 +153,20 @@ function caldo() {
 	    }
 	}, 200);
     });
+}
+
+function findHighestBrick(wordbricks) {
+    var retval = BottomOfScreen;
+    for (var i = 0; i < wordbricks.length; i++) {
+	var brick = wordbricks[i].brick;
+	if (brick.alive === true) {
+	    var bounds = brick.getBounds();
+	    if (bounds.y < retval) {
+		retval = bounds.y;
+	    }
+	}
+    }
+    return retval;
 }
 
 function preload() {
