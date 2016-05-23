@@ -8,6 +8,7 @@
    [cemerick.friend [workflows :as workflows]]
    [clojure.data.json :refer [write-str]]
    [clojure.java.io :as io]
+   [clojure.set :refer [union]]
    [clojure.string :as string]
    [clojure.tools.logging :as log]
    [compojure.core :refer [context defroutes GET PUT POST DELETE ANY]]
@@ -70,7 +71,8 @@
        (let [wordclass (:class (:params request))
              word (if (= 0 (Integer. wordclass))
                     (first (shuffle italiano/infinitives))
-                    (first (shuffle italiano/nominative-pronouns)))]
+                    (first (shuffle (union italiano/nominative-pronouns
+                                           italiano/propernouns))))]
          (log/debug (str "GET /randomroot: class=" wordclass))
          {:status 200
           :headers {"Content-type" "application/json;charset=utf-8"}
