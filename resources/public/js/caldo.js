@@ -159,22 +159,37 @@ function create() {
 
 }
 
+function foo(k) {
+    blah = Phaser.Easing.Bounce.Out(k);
+    if (k == 1) {
+	log(TRACE,"reactivating checks post-tween.");
+	for (var i = 0; i < wordbricks.length; i++) {
+	    wordbricks[i].brick.doTweenCheck = true;
+	}
+    }
+    return blah;
+}
+
 function update() {
     for (var i = 0; i < wordbricks.length; i++) {
 	var brick = wordbricks[i].brick;
 	var text =  wordbricks[i].text;
-
 	if (brick.doTweenCheck === true) {
+	    log(TRACE,"checking brick: " + text._text);
 	    brick.doTweenCheck = false;
 	    var brick_bottom = findBottom(brick,text._text,wordbricks);
 	    log(TRACE,"brick_bottom for brick with y= " +
 		brick.y + " = " + brick_bottom);
 	    log(TRACE,"brick's doTweenCheck: " + brick.doTweenCheck);
 	    if (brick.y < brick_bottom) {
-		log(TRACE,"we should do a tween for brick with y=" + brick.y);
+		// we are too high and must fall down to brick_bottom now.
+		oneOrMoreBricksChanged = true;
+		log(DEBUG,"we should do a tween for brick with text:" +
+		    text._text);
 		var tween = game.add.tween(brick);
 		tween.to({ x: [brick.x], y: [brick_bottom] },
-			 1000, Phaser.Easing.Bounce.Out,true);
+			 1000, foo,
+			 true);
 		tween.start();
 	    }
 	}
@@ -208,6 +223,7 @@ function add_brick(x,wordclass,wordbricks) {
 
 function onMouseUp(sprite,wordbricks) {
     log(DEBUG,"reactivating brick tweens.");
+//    sprite.doTweenCheck = true;
     for (var i = 0; i < wordbricks.length; i++) {
 	wordbricks[i].brick.doTweenCheck = true;
     }
@@ -230,29 +246,63 @@ function findBottom(brick,text,wordbricks) {
 }
 
 function bricksUnderMe(brick,text,wordbricks) {
-    /* find all bricks which overlap with this one */
+    /* find all bricks directly under us */
     var l1 = brick.x;
     var r1 = l1 + bricksize.x;
     var retval = [];
     for (var i = 0; i < wordbricks.length; i++) {
-	var this_brick = wordbricks[i].brick;
-	if (brick === this_brick) {
+	var other_brick = wordbricks[i].brick;
+	if (brick === other_brick) {
 	    continue;
 	}
 
-	var l2 = this_brick.x;
+	var l2 = other_brick.x;
 	var r2 = l2 + bricksize.x;
+	// [ l1 <- --- -> r1]
+	//       [ l2 <- --- -> r2 ]
 	
 	if ((r2 >= l1) &&
 	    (l2 <= r1) &&
-	    (brick.y < this_brick.y)) {
-	    log(DEBUG,"brick: " + text+
+	    (brick.y < other_brick.y)) {
+	    log(DEBUG,"brick: " + text +
 		"(l1=" + l1 + ",r1=" + r1 + ")" +
 		" has a brick below it:" +
 		wordbricks[i].text._text + 
 		"(l2=" + l2 + ",r2=" + r2 + ")");
 
-	    retval.push(this_brick);
+	    retval.push(other_brick);
+	}
+	
+    }
+    return retval;
+}
+
+function bricksOverMe(brick,text,wordbricks) {
+    /* find all bricks directly above us */
+    var l1 = brick.x;
+    var r1 = l1 + bricksize.x;
+    var retval = [];
+    for (var i = 0; i < wordbricks.length; i++) {
+	var other_brick = wordbricks[i].brick;
+	if (brick === other_brick) {
+	    continue;
+	}
+
+	var l2 = other_brick.x;
+	var r2 = l2 + bricksize.x;
+	//       [ l2 <- --- -> r2 ]
+	// [ l1 <- --- -> r1]
+
+	
+	if ((r2 >= l1) &&
+	    (l2 <= r1) &&
+	    (brick.y > other_brick.y)) {
+	    log(DEBUG,"brick: " + text._text +
+		"(l1=" + l1 + ",r1=" + r1 + ")" +
+		" has a brick over it:" +
+		wordbricks[i].text._text + 
+		"(l2=" + l2 + ",r2=" + r2 + ")");
+	    retval.push(other_brick);
 	}
 	
     }
