@@ -15,7 +15,7 @@ var num_shelves = 2;
 var newWordInterval = [3000,4000];
 var logging_level = DEBUG;
 var hang_shelves = false;
-
+var bricksize = { y: 54 };
 // TODO: load from server.
 var shelf_words = [
     ["io","tu","lui","lei","noi","voi","loro"],
@@ -158,8 +158,9 @@ function create() {
 
 function update() {
     for (var i = 0; i < wordbricks.length; i++) {
-	var brick = wordbricks[i][0];
-	var text =  wordbricks[i][1];
+	var brick = wordbricks[i].brick;
+	var text =  wordbricks[i].text;
+	do_one_tween(brick,text);
 	text.x = Math.floor(brick.x + brick.width / 2);
 	text.y = Math.floor(brick.y + brick.height / 2);
     }
@@ -173,12 +174,43 @@ function randomWord(shelf) {
 function add_brick(x,wordclass) {
     var style = { font: '18px Arial', fill: '#000' };
     var sprite = game.add.sprite(x,0,'tile');
-    tween = game.add.tween(sprite);
-    tween.to({ x: [x], y: [350] }, 3528, Phaser.Easing.Bounce.Out,true);
-    tween.start();
-    
     var text = game.add.text(x,0, randomWord(wordclass), style);
     text.anchor.set(0.5,0.55);
-    wordbricks.push([sprite,text]);
+    wordbricks.push({"brick": sprite,
+		     "text": text});
+    sprite.tween_needed = true;
 }
 
+function do_one_tween(brick,text) {
+    var brick_bottom = find_bottom_for(brick,wordbricks);
+    if ((brick.y < brick_bottom) && (brick.tween_needed == true)) {
+	brick.tween_needed = false;
+	var tween = game.add.tween(brick);
+	tween.to({ x: [brick.x], y: [brick_bottom] }, 1000, Phaser.Easing.Bounce.Out,true);
+	tween.start();
+    }
+}
+
+function find_bottom_for(brick,wordbricks) {
+    var retval = 330;
+    for (var i = 0; i < wordbricks.length; i++) {
+	var this_brick = wordbricks[i].brick;
+	if (brick === this_brick) {
+	    return retval;
+	}
+	retval = retval - bricksize.y;
+    }
+}
+
+function find_overlapping_bricks(brick,wordbricks) {
+    /* find all bricks which overlap with this one */
+    for (var i = 0; i < wordbricks.length; i++) {
+	var this_brick = wordbricks[i].brick;
+	if (brick === this_brick) {
+	    continue;
+	}
+	if (brick) {}
+    }
+
+    
+}
