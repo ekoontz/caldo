@@ -135,7 +135,7 @@ function caldo() {
 	var i = 0;
 	window.setInterval(function() {
 	    if (i < 4) {
-		add_brick((125 * i) + 25, i % 2,wordbricks);
+		addBrick((125 * i) + 25, i % 2,wordbricks);
 		i++;
 	    }
 	}, 1000);
@@ -191,7 +191,7 @@ function randomWord(shelf) {
     return shelf_words[shelf][random_integer];
 }
 
-function add_brick(x,wordclass,wordbricks) {
+function addBrick(x,wordclass,wordbricks) {
     var style = { font: '18px Arial', fill: '#000' };
     var sprite = game.add.sprite(x,0,'tile');
     var text = game.add.text(x,0, randomWord(wordclass), style);
