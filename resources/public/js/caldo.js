@@ -16,11 +16,11 @@ var newWordInterval = [3000,4000];
 var logging_level = INFO;
 var hang_shelves = false;
 var bricksize = { x:130, y: 51 };
-var BrickScale = { X: 1.0, Y: 0.8 };
+var BrickScale = { X: 0.35, Y: 0.8 };
 var BrickAtom = 45;
 var BottomOfScreen = 335;
 var RightOfScreen = 500;
-
+var Mortar = 5;
 // TODO: load from server.
 var shelf_words = [
     ["io","tu","lui","lei","noi","voi","loro"],
@@ -142,10 +142,12 @@ function caldo() {
 	var i = 0;
 	window.setInterval(function() {
 	    if (i < total_bricks) {
-		addBrick((BrickAtom *
-			  Math.floor(Math.random() *
-				     ( RightOfScreen / BrickAtom)  )
-			 ), i % 3,wordbricks);
+		var position = Math.floor(Math.random() *
+					  ( RightOfScreen / BrickAtom));
+		var lengthInAtoms = Math.floor(Math.random() * 2) + 1;
+		addBrick(Mortar + (BrickAtom * position),
+			 lengthInAtoms,
+			 i % 3,wordbricks);
 		i++;
 	    }
 	}, 100);
@@ -201,10 +203,10 @@ function randomWord(shelf) {
     return shelf_words[shelf][random_integer];
 }
 
-function addBrick(x,wordclass,wordbricks) {
+function addBrick(x,length,wordclass,wordbricks) {
     var style = { font: '18px Arial', fill: '#000' };
     var sprite = game.add.sprite(x,0,'tile');
-    sprite.scale.setTo(BrickScale.X,BrickScale.Y);
+    sprite.scale.setTo(BrickScale.X * length,BrickScale.Y);
     var text = game.add.text(x,0, randomWord(wordclass), style);
     text.anchor.set(0.5,0.55);
     wordbricks.push({"brick": sprite,
