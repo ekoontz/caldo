@@ -9,18 +9,18 @@
 // must be loaded for caldo.js to work.
 
 // global constants
+var AddNewBrickInterval = 2000;
 var GameSize = {X:600,Y:400};
 var num_words_at_a_time = 20;
 var total_bricks = num_words_at_a_time;
-var newWordInterval = [3000,4000];
 var logging_level = INFO;
 var BrickSize = { Y: 49 };
 var BrickScale = { X: 0.28, Y: 0.8 };
 var BrickAtom = 45;
 var BottomOfScreen = 345;
 var RightOfScreen = 475;
-var Mortar = 5;
-var HighestBrick = {Y: 75};
+var Mortar = 5; // space between bricks
+var HighestBrick = {Y: 25};
 
 // global variables
 var words;
@@ -51,24 +51,23 @@ function respond_to_user_input(event) {
 		} else {
 		    if (roots.length === 0) {
 			log(INFO,"parsing error");
-			var animationName = "animated shake";
+			var animationName = "animated shake bad";
 			$("#userinput").addClass(animationName).one('animationend',
 								    function() {
 									$(this).removeClass(animationName);
 								    });
 		    } else {
-			var animationName = "animated flash flashy";
+			var animationName = "animated flash good";
 			$("#userinput").addClass(animationName).one('animationend',
 								    function() {
-									$(this).removeClass(animationName);
 									$("#userinput").val("");
+									$(this).removeClass(animationName);
 								    });
 
 			log(INFO,"response from server: found: " +
 			    roots.length + " roots:" +
 			    roots.join());
 		    }
-//		    $("#userinput").val("");
 		}
 
 		remove_from_blocks(roots,wordbricks);
@@ -161,8 +160,11 @@ function caldo() {
 		addBrick((BrickAtom * position),
 			 i % 2,wordbricks);
 		i++;
+	    } else {
+		alert("You lost, game over!");
+		location.reload();
 	    }
-	}, 200);
+	}, AddNewBrickInterval);
     });
 }
 
@@ -214,7 +216,7 @@ function update() {
 		    text._text);
 		var tween = game.add.tween(brick);
 		tween.to({ x: [brick.x], y: [brick_bottom] },
-			 150, function (k) {
+			 500, function (k) {
 			     return tweenMove(brick,text,k);
 			 },
 			 true);
@@ -302,7 +304,7 @@ function findBottom(brick,text,wordbricks) {
 }
 
 function bricksUnderMe(brick,text,wordbricks) {
-    /* find all bricks directly under us */
+    /* find all bricks directly under _brick_ */
     var retval = [];
     var brickBounds = brick.getBounds();
     var l1 = brickBounds.x;
