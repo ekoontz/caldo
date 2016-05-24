@@ -29,7 +29,7 @@
 (defroutes main-routes
   (route/resources "/")
 
-  (GET "/" request
+  (GET "/caldo" request
        {:status 200
         :headers {"Content-type" "text/html;charset=utf-8"}
         :body (html [:html [:head [:title "benvenuto a caldo!"]
@@ -56,7 +56,7 @@
                      ;; used by caldo().
                      [:body {:onload "caldo();"} ]])})
 
-  (GET "/say" request
+  (GET "/caldo/say" request
        {:status 200
         :headers {"Content-type" "application/json;charset=utf-8"}
         :body (let [expr (:expr (:params request))
@@ -67,7 +67,7 @@
                 (write-str {:roots roots}))})
 
 
-  (GET "/randomroot" request
+  (GET "/caldo/randomroot" request
        (let [wordclass (:class (:params request))
              word (if (= 0 (Integer. wordclass))
 
@@ -79,7 +79,7 @@
                                               (< (count k) 10))
                                             (union italiano/nominative-pronouns
                                                    italiano/propernouns)))))]
-         (log/debug (str "GET /randomroot: class=" wordclass))
+         (log/debug (str "GET /caldo/randomroot: class=" wordclass))
          {:status 200
           :headers {"Content-type" "application/json;charset=utf-8"}
           :body (write-str {:root word})})))
@@ -92,7 +92,7 @@
 
     {:allow-anon? true
      :login-uri "/login"
-     :default-landing-uri "/"
+     :default-landing-uri "/caldo"
      :unauthorized-handler #(-> 
                              {:status 401
                               :headers {"Content-type" "text/plain;charset=utf-8"}

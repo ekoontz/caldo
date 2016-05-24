@@ -43,7 +43,7 @@ function respond_to_user_input(event) {
 	    type: "GET",
 	    data: {expr: $("#userinput").val()},
             dataType: "json",
-            url: "/say"}).done(function(content) {
+            url: "/caldo/say"}).done(function(content) {
 		roots = content.roots;
 		if (roots == undefined) {
 		    log(INFO,"server returned no roots for input: '"
@@ -237,7 +237,7 @@ function randomWord(shelf) {
 	type: "GET",
 	data: {class: shelf},
 	dataType: "json",
-	url: "/randomroot"}).done(function(content) {
+	url: "/caldo/randomroot"}).done(function(content) {
 	    root = content.root;
 	});
     return root;
