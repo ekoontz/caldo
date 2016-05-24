@@ -1,4 +1,4 @@
-(defproject caldo "0.1.0"
+(defproject caldo "1.0.0-SNAPSHOT"
   :description "the hottest new game"
   :url "https://caldo.verbcoach.com"
   :license {:name "GPL 3"
