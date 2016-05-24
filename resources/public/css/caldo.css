@@ -21,7 +21,7 @@ body {
 .bad {
     animation-duration: 0.5s;
     animation-delay: 0s;
-    background: red;
+    background: pink;
 }
 
 #header h1 {
