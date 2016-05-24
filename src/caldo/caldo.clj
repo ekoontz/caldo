@@ -26,7 +26,7 @@
 
 (declare get-roots)
 
-(defroutes the-actual-routes
+(defroutes routes
   (GET "/" request
        {:status 200
         :headers {"Content-type" "text/html;charset=utf-8"}
@@ -85,7 +85,7 @@
   (route/resources "/")
 
   (context "/caldo" []
-           the-actual-routes))
+           routes))
 
 (def app
   (handler/site 
