@@ -13,8 +13,15 @@ body {
     float:left;
 }
 
-.flashy {
+.good {
+    animation-duration: 0.5s;
+    animation-delay: 0s;
     background: lightgreen;
+}
+.bad {
+    animation-duration: 0.5s;
+    animation-delay: 0s;
+    background: red;
 }
 
 #header h1 {
