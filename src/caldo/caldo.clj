@@ -70,9 +70,15 @@
   (GET "/randomroot" request
        (let [wordclass (:class (:params request))
              word (if (= 0 (Integer. wordclass))
+
+                    ;; class 1: verbs
                     (first (shuffle italiano/infinitives))
-                    (first (shuffle (union italiano/nominative-pronouns
-                                           italiano/propernouns))))]
+
+                    ;; class 2: subjects
+                    (first (shuffle (filter (fn [k]
+                                              (< (count k) 10))
+                                            (union italiano/nominative-pronouns
+                                                   italiano/propernouns)))))]
          (log/debug (str "GET /randomroot: class=" wordclass))
          {:status 200
           :headers {"Content-type" "application/json;charset=utf-8"}
