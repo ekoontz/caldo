@@ -26,10 +26,8 @@
 
 (declare get-roots)
 
-(defroutes main-routes
-  (route/resources "/")
-
-  (GET "/caldo" request
+(defroutes the-actual-routes
+  (GET "/" request
        {:status 200
         :headers {"Content-type" "text/html;charset=utf-8"}
         :body (html [:html [:head [:title "benvenuto a caldo!"]
@@ -56,7 +54,7 @@
                      ;; used by caldo().
                      [:body {:onload "caldo();"} ]])})
 
-  (GET "/caldo/say" request
+  (GET "/say" request
        {:status 200
         :headers {"Content-type" "application/json;charset=utf-8"}
         :body (let [expr (:expr (:params request))
@@ -66,8 +64,7 @@
                 (log/info (str "roots: " (string/join ";" roots)))
                 (write-str {:roots roots}))})
 
-
-  (GET "/caldo/randomroot" request
+  (GET "/randomroot" request
        (let [wordclass (:class (:params request))
              word (if (= 0 (Integer. wordclass))
 
@@ -83,7 +80,12 @@
          {:status 200
           :headers {"Content-type" "application/json;charset=utf-8"}
           :body (write-str {:root word})})))
-        
+
+(defroutes main-routes
+  (route/resources "/")
+
+  (context "/caldo" []
+           the-actual-routes))
 
 (def app
   (handler/site 
