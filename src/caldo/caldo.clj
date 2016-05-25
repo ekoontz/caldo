@@ -8,6 +8,7 @@
    [cemerick.friend [workflows :as workflows]]
    [clojure.data.json :refer [write-str]]
    [clojure.java.io :as io]
+   [clojure.repl :refer [doc]]
    [clojure.set :refer [union]]
    [clojure.string :as string]
    [clojure.tools.logging :as log]
