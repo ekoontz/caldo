@@ -33,14 +33,14 @@
 
 (defmacro authenticated-routes [auth-fn & routes]
   (let [mess-with-routes (map (fn [route]
-                                (do (log/info (str "found a route:" route))
+                                (do (log/debug (str "found a route:" route))
                                     (let [[verb path request response] route
                                           wrapped-response `(~auth-fn ~request ~response)]
-                                      (log/info (str " verb: " verb))
-                                      (log/info (str " path: " path))
-                                      (log/info (str " request: " request))
-                                      (log/info (str " response: " response))
-                                      (log/info (str " wrapped-response: " wrapped-response))
+                                      (log/debug (str " verb: " verb))
+                                      (log/debug (str " path: " path))
+                                      (log/debug (str " request: " request))
+                                      (log/debug (str " response: " response))
+                                      (log/debug (str " wrapped-response: " wrapped-response))
                                       (list verb path request wrapped-response)
                                       )))
                               routes)]
