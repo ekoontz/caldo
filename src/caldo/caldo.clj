@@ -27,15 +27,12 @@
 
 (declare get-roots)
 
-(defmacro if-authorized [request response]
+(defmacro passthru-authorization [request response]
   `(do (log/info (str "authorizing: " (:path-info ~request)))
        ~response))
 
 (defmacro authenticated-routes [auth-fn & routes]
-  (let [auth-fn (if auth-fn auth-fn
-                    (fn [request response] ;; default
-                      (if-authorized request response)))
-        mess-with-routes (map (fn [route]
+  (let [mess-with-routes (map (fn [route]
                                 (do (log/info (str "found a route:" route))
                                     (let [[verb path request response] route
                                           wrapped-response `(~auth-fn ~request ~response)]
@@ -50,9 +47,10 @@
     `(compojure/routes ~@mess-with-routes)))
 
 (def routes
-  (authenticated-routes
-   (fn [request response]
-     (if-authorized request response))
+  (fn [auth-fn]
+    (authenticated-routes
+     (fn [request response]
+       (auth-fn request response))
    (GET "/" request
         {:status 200
          :headers {"Content-type" "text/html;charset=utf-8"}
@@ -104,14 +102,15 @@
                      roots (get-roots parsed)
                      debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
                  (log/info (str "roots: " (string/join ";" roots)))
-                 (write-str {:roots roots}))})))
+                 (write-str {:roots roots}))}))))
 
-(compojure/defroutes main-routes
-  (route/resources "/")
+(def main-routes
+  (compojure/routes
+   (route/resources "/")
 
-  (context "/caldo" []
-           routes))
-
+   (context "/caldo" []
+            (apply routes [(fn [request response]
+                             (passthru-authorization request response))]))))
 (def app
   (handler/site 
    (friend/authenticate
