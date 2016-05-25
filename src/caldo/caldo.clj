@@ -31,11 +31,16 @@
   `(do (log/info (str "authorizing: " (:path-info ~request)))
        ~response))
 
-(defmacro defroutes [name & routes]
-  (let [mess-with-routes (map (fn [route]
+(defn get-authorization-fn []
+  (fn [request response] (if-authorized request response)))
+
+(defmacro defroutes [{name :name
+                      authfn :auth-fn} & routes]
+  (let [authorization-function (fn [request response] (if-authorized request response))
+        mess-with-routes (map (fn [route]
                                 (do (log/info (str "found a route:" route))
                                     (let [[verb path request response] route
-                                          wrapped-response `(if-authorized ~request ~response)]
+                                          wrapped-response `(~authorization-function ~request ~response)]
                                       (log/info (str " verb: " verb))
                                       (log/info (str " path: " path))
                                       (log/info (str " request: " request))
@@ -46,8 +51,9 @@
                               routes)]
     `(compojure/defroutes ~name ~@mess-with-routes)))
 
-(defroutes routes
-             (GET "/" request
+(defroutes {:name routes
+            :authfn if-authorized}
+  (GET "/" request
                   {:status 200
                    :headers {"Content-type" "text/html;charset=utf-8"}
                    :body (html [:html [:head [:title "benvenuto a caldo!"]
@@ -100,7 +106,7 @@
                            (log/info (str "roots: " (string/join ";" roots)))
                            (write-str {:roots roots}))}))
 
-(defroutes main-routes
+(compojure/defroutes main-routes
   (route/resources "/")
 
   (context "/caldo" []
