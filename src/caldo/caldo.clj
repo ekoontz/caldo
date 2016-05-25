@@ -12,7 +12,7 @@
    [clojure.set :refer [union]]
    [clojure.string :as string]
    [clojure.tools.logging :as log]
-   [compojure.core :as compojure :refer [context defroutes GET PUT POST DELETE ANY]]
+   [compojure.core :as compojure :refer [context GET PUT POST DELETE ANY]]
    [compojure.route :as route]
    [compojure.handler :as handler]
    [environ.core :refer [env]]
@@ -31,7 +31,7 @@
   `(do (log/info (str "authorizing: " (:path-info ~request)))
        ~response))
 
-(defmacro mydefroutes [name & routes]
+(defmacro defroutes [name & routes]
   (let [mess-with-routes (map (fn [route]
                                 (do (log/info (str "found a route:" route))
                                     (let [[verb path request response] route
@@ -44,9 +44,9 @@
                                       (list verb path request wrapped-response)
                                       )))
                               routes)]
-    `(defroutes ~name ~@mess-with-routes)))
+    `(compojure/defroutes ~name ~@mess-with-routes)))
 
-(mydefroutes routes
+(defroutes routes
              (GET "/" request
                   {:status 200
                    :headers {"Content-type" "text/html;charset=utf-8"}
@@ -90,7 +90,6 @@
                     {:headers {"Content-type" "application/json;charset=utf-8"}
                      :body (write-str {:root word})}))
 
-
              (GET "/say" request
                   {:status 200
                    :headers {"Content-type" "application/json;charset=utf-8"}
@@ -99,10 +98,7 @@
                                roots (get-roots parsed)
                                debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
                            (log/info (str "roots: " (string/join ";" roots)))
-                           (write-str {:roots roots}))})
-  
-             (GET "/blah3" request {:status 200
-                                    :body "BLAH3!"}))
+                           (write-str {:roots roots}))}))
 
 (defroutes main-routes
   (route/resources "/")
