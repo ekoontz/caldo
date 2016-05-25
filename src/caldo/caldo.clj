@@ -31,8 +31,7 @@
   `(do (log/info (str "authorizing: " (:path-info ~request)))
        ~response))
 
-(defmacro defroutes [{name :name
-                      auth-fn :auth-fn} & routes]
+(defmacro authenticated-routes [auth-fn & routes]
   (let [auth-fn (if auth-fn auth-fn
                     (fn [request response] ;; default
                       (if-authorized request response)))
@@ -48,63 +47,64 @@
                                       (list verb path request wrapped-response)
                                       )))
                               routes)]
-    `(def ~name (compojure/routes ~@mess-with-routes))))
+    `(compojure/routes ~@mess-with-routes)))
 
-(defroutes {:name routes
-            :auth-fn (fn [request response]
-                       (if-authorized request response))}
-  (GET "/" request
-                  {:status 200
-                   :headers {"Content-type" "text/html;charset=utf-8"}
-                   :body (html [:html [:head [:title "benvenuto a caldo!"]
-                                       [:link {:rel "stylesheet"
-                                               :type "text/css"
-                                               :href "/css/animate.min.css"}]
-                                       [:link {:rel "stylesheet"
-                                               :type "text/css"
-                                               :href "/css/caldo.css"}]
-                                       [:script {:type "text/javascript"
-                                                 :src "/js/jquery.min.js"}]
-                                       [:script {:type "text/javascript"
-                                                 :src "/js/mustache.min.js"}]
-                                       [:script {:type "text/javascript"
-                                                 :src "/js/phaser.min.js"}]
-                                       [:script {:type "text/javascript"
-                                                 :src "/js/log4.js"}]
-                                       [:script {:type "text/javascript"
-                                                 :src "/js/caldo.js"}]
-                                       ]
-                                ;; See ../../resources/public/js/caldo.js for definition of
-                                ;; the caldo() onload function: caldo().
-                                ;; See ../../resources/public/mst/caldo.mst for HTML template
-                                ;; used by caldo().
-                                [:body {:onload "caldo();"} ]])})
-
-             (GET "/randomroot" request
-                  (let [wordclass (:class (:params request))
-                        word (if (= 0 (Integer. wordclass))
-
-                               ;; class 1: verbs
-                               (first (shuffle italiano/infinitives))
-
-                               ;; class 2: subjects
-                               (first (shuffle (filter (fn [k]
-                                              (< (count k) 10))
-                                            (union italiano/nominative-pronouns
-                                                   italiano/propernouns)))))]
-
-                    {:headers {"Content-type" "application/json;charset=utf-8"}
-                     :body (write-str {:root word})}))
-
-             (GET "/say" request
-                  {:status 200
-                   :headers {"Content-type" "application/json;charset=utf-8"}
-                   :body (let [expr (:expr (:params request))
-                               parsed (reduce concat (map :parses (parse expr)))
-                               roots (get-roots parsed)
-                               debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
-                           (log/info (str "roots: " (string/join ";" roots)))
-                           (write-str {:roots roots}))}))
+(def routes
+  (authenticated-routes
+   (fn [request response]
+     (if-authorized request response))
+   (GET "/" request
+        {:status 200
+         :headers {"Content-type" "text/html;charset=utf-8"}
+         :body (html [:html [:head [:title "benvenuto a caldo!"]
+                             [:link {:rel "stylesheet"
+                                     :type "text/css"
+                                     :href "/css/animate.min.css"}]
+                             [:link {:rel "stylesheet"
+                                     :type "text/css"
+                                     :href "/css/caldo.css"}]
+                             [:script {:type "text/javascript"
+                                       :src "/js/jquery.min.js"}]
+                             [:script {:type "text/javascript"
+                                       :src "/js/mustache.min.js"}]
+                             [:script {:type "text/javascript"
+                                       :src "/js/phaser.min.js"}]
+                             [:script {:type "text/javascript"
+                                       :src "/js/log4.js"}]
+                             [:script {:type "text/javascript"
+                                       :src "/js/caldo.js"}]
+                             ]
+                      ;; See ../../resources/public/js/caldo.js for definition of
+                      ;; the caldo() onload function: caldo().
+                      ;; See ../../resources/public/mst/caldo.mst for HTML template
+                      ;; used by caldo().
+                      [:body {:onload "caldo();"} ]])})
+   
+   (GET "/randomroot" request
+        (let [wordclass (:class (:params request))
+              word (if (= 0 (Integer. wordclass))
+                     
+                     ;; class 1: verbs
+                     (first (shuffle italiano/infinitives))
+                     
+                     ;; class 2: subjects
+                     (first (shuffle (filter (fn [k]
+                                               (< (count k) 10))
+                                             (union italiano/nominative-pronouns
+                                                    italiano/propernouns)))))]
+          
+          {:headers {"Content-type" "application/json;charset=utf-8"}
+           :body (write-str {:root word})}))
+   
+   (GET "/say" request
+        {:status 200
+         :headers {"Content-type" "application/json;charset=utf-8"}
+         :body (let [expr (:expr (:params request))
+                     parsed (reduce concat (map :parses (parse expr)))
+                     roots (get-roots parsed)
+                     debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
+                 (log/info (str "roots: " (string/join ";" roots)))
+                 (write-str {:roots roots}))})))
 
 (compojure/defroutes main-routes
   (route/resources "/")
