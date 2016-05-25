@@ -28,7 +28,7 @@
 (declare get-roots)
 
 (defmacro passthru-authorization [request response]
-  `(do (log/info (str "authorizing: " (:path-info ~request)))
+  `(do (log/info (str "passthru authorized request: " (:path-info ~request)))
        ~response))
 
 (defmacro authenticated-routes [auth-fn & routes]
@@ -103,22 +103,24 @@
                      debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
                  (log/info (str "roots: " (string/join ";" roots)))
                  (write-str {:roots roots}))}))))
-
-(def main-routes
-  (compojure/routes
-   (route/resources "/")
-
-   (context "/caldo" []
-            (apply routes [(fn [request response]
-                             (passthru-authorization request response))]))))
 (def app
   (handler/site 
    (friend/authenticate
-    main-routes
+    (compojure/routes
+     (route/resources "/")
+
+     ;; allow this app to work with either "/" or..
+     (apply routes [(fn [request response]
+                      (passthru-authorization request response))])
+
+     ;; .. with "/caldo"
+     (context "/caldo" []
+              (apply routes [(fn [request response]
+                               (passthru-authorization request response))])))
 
     {:allow-anon? true
      :login-uri "/login"
-     :default-landing-uri "/caldo"
+     :default-landing-uri "/"
      :unauthorized-handler #(-> 
                              {:status 401
                               :headers {"Content-type" "text/plain;charset=utf-8"}
