@@ -27,8 +27,8 @@
 
 (declare get-roots)
 
-(defroutes routes
-  (GET "/" request
+(def top-route
+  '(GET "/" request
        {:status 200
         :headers {"Content-type" "text/html;charset=utf-8"}
         :body (html [:html [:head [:title "benvenuto a caldo!"]
@@ -53,34 +53,37 @@
                      ;; the caldo() onload function: caldo().
                      ;; See ../../resources/public/mst/caldo.mst for HTML template
                      ;; used by caldo().
-                     [:body {:onload "caldo();"} ]])})
+                     [:body {:onload "caldo();"} ]])}))
 
-  (GET "/say" request
-       {:status 200
-        :headers {"Content-type" "application/json;charset=utf-8"}
-        :body (let [expr (:expr (:params request))
-                    parsed (reduce concat (map :parses (parse expr)))
-                    roots (get-roots parsed)
-                    debug (log/debug (str "# parses('" expr "'): " (count parsed)))]
-                (log/info (str "roots: " (string/join ";" roots)))
-                (write-str {:roots roots}))})
+(def foobar
+  '[(GET "/blah" request {:status 200
+                          :body "BLAH!"})])
 
-  (GET "/randomroot" request
-       (let [wordclass (:class (:params request))
-             word (if (= 0 (Integer. wordclass))
+(defmacro if-authorized [request response]
+  `(do (log/info (str "authorizing: " ~request))
+       ~response))
 
-                    ;; class 1: verbs
-                    (first (shuffle italiano/infinitives))
+(defmacro mydefroutes [name & routes]
+  (let [mess-with-routes (map (fn [route]
+                                (do (log/info (str "found a route:" route))
+                                    (let [[verb path request response] route
+                                          wrapped-response `(if-authorized ~request ~response)]
+                                      (log/info (str " verb: " verb))
+                                      (log/info (str " path: " path))
+                                      (log/info (str " request: " request))
+                                      (log/info (str " response: " response))
+                                      (log/info (str " wrapped-response: " wrapped-response))
+                                      (list verb path request wrapped-response)
+                                      )))
+                              routes)]
+    `(defroutes ~name ~@mess-with-routes)))
 
-                    ;; class 2: subjects
-                    (first (shuffle (filter (fn [k]
-                                              (< (count k) 10))
-                                            (union italiano/nominative-pronouns
-                                                   italiano/propernouns)))))]
-         (log/debug (str "GET /caldo/randomroot: class=" wordclass))
-         {:status 200
-          :headers {"Content-type" "application/json;charset=utf-8"}
-          :body (write-str {:root word})})))
+(mydefroutes routes
+  (GET "/" request {:status 200
+                    :body "HELLO."})
+  
+  (GET "/blah3" request {:status 200
+                         :body "BLAH3!"}))
 
 (defroutes main-routes
   (route/resources "/")
