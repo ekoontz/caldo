@@ -27,34 +27,6 @@
 
 (declare get-roots)
 
-(def top-route
-  '(GET "/" request
-       {:status 200
-        :headers {"Content-type" "text/html;charset=utf-8"}
-        :body (html [:html [:head [:title "benvenuto a caldo!"]
-                            [:link {:rel "stylesheet"
-                                    :type "text/css"
-                                    :href "/css/animate.min.css"}]
-                            [:link {:rel "stylesheet"
-                                    :type "text/css"
-                                    :href "/css/caldo.css"}]
-                            [:script {:type "text/javascript"
-                                      :src "/js/jquery.min.js"}]
-                            [:script {:type "text/javascript"
-                                      :src "/js/mustache.min.js"}]
-                            [:script {:type "text/javascript"
-                                      :src "/js/phaser.min.js"}]
-                            [:script {:type "text/javascript"
-                                      :src "/js/log4.js"}]
-                            [:script {:type "text/javascript"
-                                      :src "/js/caldo.js"}]
-                            ]
-                     ;; See ../../resources/public/js/caldo.js for definition of
-                     ;; the caldo() onload function: caldo().
-                     ;; See ../../resources/public/mst/caldo.mst for HTML template
-                     ;; used by caldo().
-                     [:body {:onload "caldo();"} ]])}))
-
 (defmacro if-authorized [request response]
   `(do (log/info (str "authorizing: " (:path-info ~request)))
        ~response))
