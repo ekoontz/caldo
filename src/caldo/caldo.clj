@@ -31,16 +31,15 @@
   `(do (log/info (str "authorizing: " (:path-info ~request)))
        ~response))
 
-(defn get-authorization-fn []
-  (fn [request response] (if-authorized request response)))
-
 (defmacro defroutes [{name :name
-                      authfn :auth-fn} & routes]
-  (let [authorization-function (fn [request response] (if-authorized request response))
+                      auth-fn :auth-fn} & routes]
+  (let [auth-fn (if auth-fn auth-fn
+                    (fn [request response] ;; default
+                      (if-authorized request response)))
         mess-with-routes (map (fn [route]
                                 (do (log/info (str "found a route:" route))
                                     (let [[verb path request response] route
-                                          wrapped-response `(~authorization-function ~request ~response)]
+                                          wrapped-response `(~auth-fn ~request ~response)]
                                       (log/info (str " verb: " verb))
                                       (log/info (str " path: " path))
                                       (log/info (str " request: " request))
@@ -49,10 +48,11 @@
                                       (list verb path request wrapped-response)
                                       )))
                               routes)]
-    `(compojure/defroutes ~name ~@mess-with-routes)))
+    `(def ~name (compojure/routes ~@mess-with-routes))))
 
 (defroutes {:name routes
-            :authfn if-authorized}
+            :auth-fn (fn [request response]
+                       (if-authorized request response))}
   (GET "/" request
                   {:status 200
                    :headers {"Content-type" "text/html;charset=utf-8"}
