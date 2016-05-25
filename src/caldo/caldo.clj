@@ -27,15 +27,15 @@
 
 (declare get-roots)
 
-(defmacro passthru-authorization [request response]
-  `(do (log/info (str "passthru authorized request: " (:path-info ~request)))
+(defmacro passthru-authorization [path request response]
+  `(do (log/info (str "passthru authorized request: " ~path))
        ~response))
 
 (defmacro authenticated-routes [auth-fn & routes]
   (let [mess-with-routes (map (fn [route]
                                 (do (log/debug (str "found a route:" route))
                                     (let [[verb path request response] route
-                                          wrapped-response `(~auth-fn ~request ~response)]
+                                          wrapped-response `(~auth-fn ~path ~request ~response)]
                                       (log/debug (str " verb: " verb))
                                       (log/debug (str " path: " path))
                                       (log/debug (str " request: " request))
@@ -46,11 +46,11 @@
                               routes)]
     `(compojure/routes ~@mess-with-routes)))
 
-(def routes
+(def routes-fn
   (fn [auth-fn]
     (authenticated-routes
-     (fn [request response]
-       (auth-fn request response))
+     (fn [path request response]
+       (auth-fn path request response))
 
      (GET "/" request
           {:status 200
@@ -111,13 +111,13 @@
      (route/resources "/")
 
      ;; allow this app to work with either "/" or..
-     (apply routes [(fn [request response]
-                      (passthru-authorization request response))])
+     (apply routes-fn [(fn [path request response]
+                         (passthru-authorization path request response))])
 
      ;; .. with "/caldo"
      (context "/caldo" []
-              (apply routes [(fn [request response]
-                               (passthru-authorization request response))])))
+              (apply routes-fn [(fn [path request response]
+                                  (passthru-authorization path request response))])))
 
     {:allow-anon? true
      :login-uri "/login"
