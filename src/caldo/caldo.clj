@@ -3,11 +3,7 @@
   (:require
    [dag_unify.core :refer [get-in unify]]
    [babel.italiano :as italiano :refer [generate lexicon parse]]
-   [caldo.auth.google :as google-auth]
-   [cemerick.friend :as friend]
-   [cemerick.friend [workflows :as workflows]]
    [clojure.data.json :refer [write-str]]
-   [clojure.java.io :as io]
    [clojure.repl :refer [doc]]
    [clojure.set :refer [union]]
    [clojure.string :as string]
@@ -15,19 +11,12 @@
    [compojure.core :as compojure :refer [context GET PUT POST DELETE ANY]]
    [compojure.route :as route]
    [compojure.handler :as handler]
-   [environ.core :refer [env]]
-   [friend-oauth2.workflow :as oauth2]
-   [hiccup.core :as h :refer [html]]
-   [ring.adapter.jetty :as jetty]
-   [ring.middleware.session :as session]
-   [ring.middleware.session.cookie :as cookie]
-   [ring.middleware.stacktrace :as trace]
-   [ring.util.codec :as codec]
-   [ring.util.response :as resp]))
+   [hiccup.core :as h :refer [html]]))
 
 (declare get-roots)
 
 (defmacro passthru-authorization [path request response]
+  "simply allow the request to proceed and send the response."
   `(do (log/info (str "passthru authorized request: " ~path))
        ~response))
 
@@ -83,20 +72,16 @@
           (let [wordclass (Integer. (:class (:params request)))
                 word (cond
                        (= 0 wordclass)
-                       ;; class 1: verbs
                        (first (shuffle italiano/infinitives))
 
                        (= 1 wordclass)
-                       ;; class 2: subjects
                        (first (shuffle (filter (fn [k]
                                                  (< (count k) 10)) ;; filter out long (> 10 char) words
                                                (union italiano/nominative-pronouns
                                                       italiano/propernouns))))
-
-                       ;; class 3: articles
                        (= 2 wordclass)
                        (first (shuffle italiano/articles))
-                       
+
                        (= 3 wordclass)
                        (first (shuffle italiano/nouns)))]
             {:headers {"Content-type" "application/json;charset=utf-8"}
@@ -113,29 +98,17 @@
                    (write-str {:roots roots}))}))))
 (def app
   (handler/site 
-   (friend/authenticate
-    (compojure/routes
-     (route/resources "/")
+   (compojure/routes
+    (route/resources "/")
 
-     ;; allow this app to work with either "/" or..
-     (apply routes-fn [(fn [path request response]
-                         (passthru-authorization path request response))])
+    ;; allow this app to work with either "/" or..
+    (apply routes-fn [(fn [path request response]
+                        (passthru-authorization path request response))])
 
-     ;; .. with "/caldo"
-     (context "/caldo" []
-              (apply routes-fn [(fn [path request response]
-                                  (passthru-authorization path request response))])))
-
-    {:allow-anon? true
-     :login-uri "/login"
-     :default-landing-uri "/"
-     :unauthorized-handler #(-> 
-                             {:status 401
-                              :headers {"Content-type" "text/plain;charset=utf-8"}
-                              :body "Unauthorized."})
-
-     :workflows [(workflows/interactive-form)
-                 (oauth2/workflow google-auth/auth-config)]})))
+    ;; .. with "/caldo".
+    (context "/caldo" []
+             (apply routes-fn [(fn [path request response]
+                                 (passthru-authorization path request response))])))))
 
 (defn get-roots [parses]
   (set
