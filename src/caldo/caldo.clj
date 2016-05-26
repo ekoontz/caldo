@@ -80,18 +80,25 @@
                         [:body {:onload "caldo();"} ]])})
    
      (GET "/randomroot" request
-          (let [wordclass (:class (:params request))
-                word (if (= 0 (Integer. wordclass))
-                       
+          (let [wordclass (Integer. (:class (:params request)))
+                word (cond
+                       (= 0 wordclass)
                        ;; class 1: verbs
                        (first (shuffle italiano/infinitives))
-                       
+
+                       (= 1 wordclass)
                        ;; class 2: subjects
                        (first (shuffle (filter (fn [k]
-                                                 (< (count k) 10))
+                                                 (< (count k) 10)) ;; filter out long (> 10 char) words
                                                (union italiano/nominative-pronouns
-                                                      italiano/propernouns)))))]
-            
+                                                      italiano/propernouns))))
+
+                       ;; class 3: articles
+                       (= 2 wordclass)
+                       (first (shuffle italiano/articles))
+                       
+                       (= 3 wordclass)
+                       (first (shuffle italiano/nouns)))]
             {:headers {"Content-type" "application/json;charset=utf-8"}
              :body (write-str {:root word})}))
      
@@ -136,5 +143,9 @@
              [(get-in parse [:comp :italiano :italiano])
               (if (get-in parse [:root :italiano :infinitive])
                 (get-in parse [:root :italiano :infinitive])
-                (get-in parse [:root :italiano :italiano]))])
+                (get-in parse [:root :italiano :italiano]))
+              (get-in parse [:comp :head :italiano :italiano])
+              (get-in parse [:comp :comp :italiano :italiano])
+              (get-in parse [:head :italiano :italiano])
+              (get-in parse [:comp :italiano :italiano])])
            parses)))

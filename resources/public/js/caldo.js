@@ -9,7 +9,7 @@
 // must be loaded for caldo.js to work.
 
 // global constants
-var AddNewBrickInterval = 2000;
+var AddNewBrickInterval = 3000;
 var GameSize = {X:600,Y:400};
 var num_words_at_a_time = 20;
 var total_bricks = num_words_at_a_time;
@@ -158,7 +158,7 @@ function caldo() {
 		var position = Math.floor(Math.random() *
 					  ( RightOfScreen / BrickAtom));
 		addBrick((BrickAtom * position),
-			 i % 2,wordbricks);
+			 i % 4,wordbricks);
 		i++;
 	    } else {
 		alert("You lost, game over!");
