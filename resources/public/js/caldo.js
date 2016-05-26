@@ -120,19 +120,15 @@ function killBrick(brick,text) {
 }
 
 function caldo() {
-    $.get('/mst/caldo.mst', function(template) {
+    $.get('/mst/caldo.mst', function(body_template) {
 	view = {
-	    "caldo": [
-		{}
-	    ],
-	    "name": function () {
-		return "caldo";
+	    "caldo": {
+		"message": "Caldo"
 	    }
 	}
 
 	// 1. populate page with HTML:
-	output = Mustache.render(template,view);
-	$("body").html(output);
+	$("body").html(Mustache.render(body_template,view));
 
 	// 2. connect input element to game.
 	$("#userinput").keypress(respond_to_user_input);
@@ -229,13 +225,13 @@ function update() {
     }
 }
 
-function randomWord(shelf) {
+function randomWord(wordclass) {
     var root;
     $.ajax({
 	async: false, // wait for a response before returning.
 	cache: false,
 	type: "GET",
-	data: {class: shelf},
+	data: {class: wordclass},
 	dataType: "json",
 	url: "/caldo/randomroot"}).done(function(content) {
 	    root = content.root;

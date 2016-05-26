@@ -1,10 +1,10 @@
 {{#caldo}}
 <div id="left">
   <div id="header">
-   <h1></h1>
+   <h1>{{message}}</h1>
   </div>
-
 </div>
+
 <div id="gamecontainer">
 
 </div>
@@ -12,6 +12,5 @@
 <div id="userinputdiv">
    <input size="30" id="userinput"> </input>
 </div>
-
 
 {{/caldo}}
