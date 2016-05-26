@@ -251,19 +251,6 @@ function addBrick(x,wordclass,wordbricks) {
     wordbricks.push({"brick": sprite,
 		     "text": text});
     checkBricks = true;
-
-    // mouse support: for debugging only.
-    sprite.inputEnabled = true;
-    sprite.events.onInputDown.add(function() {
-	killBrick(sprite,text);
-    },this);
-
-
-}
-
-function onMouseUp(sprite,wordbricks) {
-    log(DEBUG,"reactivating brick tweens.");
-    checkBricks = true;
 }
 
 function updateText(brick,text) {
