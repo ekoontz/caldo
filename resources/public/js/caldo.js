@@ -128,7 +128,7 @@ function caldo() {
 	}
 
 	// 1. populate page with HTML:
-	$("body").html(Mustache.render(body_template,view));
+	$("#caldo").html(Mustache.render(body_template,view));
 
 	// 2. connect input element to game.
 	$("#userinput").keypress(respond_to_user_input);

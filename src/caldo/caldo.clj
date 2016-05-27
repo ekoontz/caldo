@@ -35,40 +35,62 @@
                               routes)]
     `(compojure/routes ~@mess-with-routes)))
 
-(defn routes [& {:keys [auth-fn]
-                 :or {auth-fn
-                      (fn [path request response]
-                        (passthru-authorization path request response))}}]
+(defn css [request]
+  (html [:link {:rel "stylesheet"
+                :type "text/css"
+                :href "/css/animate.min.css"}]
+        [:link {:rel "stylesheet"
+                :type "text/css"
+                :href "/css/caldo.css"}]))
+
+(defn js [request]
+  (html [:script {:type "text/javascript"
+                  :src "/js/jquery.min.js"}]
+        [:script {:type "text/javascript"
+                  :src "/js/mustache.min.js"}]
+        [:script {:type "text/javascript"
+                  :src "/js/phaser.min.js"}]
+        [:script {:type "text/javascript"
+                  :src "/js/log4.js"}]
+        [:script {:type "text/javascript"
+                  :src "/js/caldo.js"}]))
+
+(defn head [request]
+  (html
+   [:head
+    [:title "Benvenuto a caldo!"]
+    (css request)
+    (js request)]))
+
+(defn body [request]
+  (html [:body {:onload "caldo();"}
+         [:div#caldo " "]]))
+
+(defn routes [& {:keys [authorize body css head js]
+                 :or {authorize (fn [path request response]
+                                  (passthru-authorization path request response))
+                      css (fn [request]
+                            (css request))
+                      js (fn [request]
+                           (js request))
+                      head (fn [request]
+                             (head request))
+                      body (fn [request]
+                             (body request))}}]
   (authenticated-routes
    (fn [path request response]
-     (auth-fn path request response))
+     (authorize path request response))
 
    (GET "/" request
         {:status 200
          :headers {"Content-type" "text/html;charset=utf-8"}
-         :body (html [:html [:head [:title "benvenuto a caldo!"]
-                             [:link {:rel "stylesheet"
-                                     :type "text/css"
-                                     :href "/css/animate.min.css"}]
-                             [:link {:rel "stylesheet"
-                                     :type "text/css"
-                                     :href "/css/caldo.css"}]
-                             [:script {:type "text/javascript"
-                                       :src "/js/jquery.min.js"}]
-                             [:script {:type "text/javascript"
-                                       :src "/js/mustache.min.js"}]
-                             [:script {:type "text/javascript"
-                                       :src "/js/phaser.min.js"}]
-                             [:script {:type "text/javascript"
-                                       :src "/js/log4.js"}]
-                             [:script {:type "text/javascript"
-                                       :src "/js/caldo.js"}]
-                             ]
+         :body (html [:html
+                      (head request)
                       ;; See ../../resources/public/js/caldo.js for definition of
                       ;; the caldo() onload function: caldo().
                       ;; See ../../resources/public/mst/caldo.mst for HTML template
                       ;; used by caldo().
-                      [:body {:onload "caldo();"} ]])})
+                      (body request)])})
    
    (GET "/randomroot" request
         (let [wordclass (Integer. (:class (:params request)))
