@@ -1,5 +1,5 @@
-(defproject caldo "1.0.0-SNAPSHOT"
-  :description "the hottest new game"
+(defproject caldo "1.0.0"
+  :description "a tetris-like language game"
   :url "https://caldo.verbcoach.com"
   :license {:name "GPL 3"
             :url "http://gnu.org/"}
