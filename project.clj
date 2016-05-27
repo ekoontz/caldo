@@ -1,9 +1,9 @@
-(defproject caldo "1.0.0"
+(defproject caldo "1.0.1"
   :description "a tetris-like language game"
   :url "https://caldo.verbcoach.com"
   :license {:name "GPL 3"
             :url "http://gnu.org/"}
-  :dependencies [[babel "1.4.5-SNAPSHOT"]
+  :dependencies [[babel "1.4.5"]
                  [dag_unify "1.1.1"]
                  [log4j/log4j "1.2.16"]
                  [org.clojure/clojure "1.7.0"]
