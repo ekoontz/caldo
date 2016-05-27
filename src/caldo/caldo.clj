@@ -62,6 +62,10 @@
     (css request)
     (js request)]))
 
+;; See ../../resources/public/js/caldo.js for definition of
+;; the caldo() onload function: caldo().
+;; See ../../resources/public/mst/caldo.mst for HTML template
+;; used within caldo().
 (defn body [request]
   (html [:body {:onload "caldo();"}
          [:div#caldo " "]]))
@@ -86,10 +90,6 @@
          :headers {"Content-type" "text/html;charset=utf-8"}
          :body (html [:html
                       (head request)
-                      ;; See ../../resources/public/js/caldo.js for definition of
-                      ;; the caldo() onload function: caldo().
-                      ;; See ../../resources/public/mst/caldo.mst for HTML template
-                      ;; used by caldo().
                       (body request)])})
    
    (GET "/randomroot" request
