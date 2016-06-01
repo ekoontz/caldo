@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [get-in])
   (:require
    [dag_unify.core :refer [get-in unify]]
-   [babel.italiano :as italiano :refer [generate lexicon parse]]
+   [babel.italiano :as italiano :refer [fo generate lexicon parse]]
    [clojure.data.json :refer [write-str]]
    [clojure.repl :refer [doc]]
    [clojure.set :refer [union]]
