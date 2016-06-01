@@ -1,4 +1,4 @@
-(defproject caldo "1.0.2"
+(defproject caldo "1.0.3"
   :description "a tetris-like language game"
   :url "https://caldo.verbcoach.com"
   :license {:name "GPL 3"
