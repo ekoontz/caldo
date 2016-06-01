@@ -1,6 +1,6 @@
 (ns caldo.core-test
   (:require [clojure.test :refer :all]
-            [caldo.core :refer :all]))
+            [caldo.caldo :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."
